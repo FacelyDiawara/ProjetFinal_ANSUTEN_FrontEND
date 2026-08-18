@@ -13,4 +13,5 @@ export interface Entreprise {
     role: string;
   };
   statut?: 'EN_ATTENTE' | 'VALIDEE' | 'REJETEE';
+  siteWeb?: string;
 }

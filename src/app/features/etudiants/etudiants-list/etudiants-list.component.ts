@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal, computed, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EtudiantService } from '../../../services/etudiant.service';
 import { AuthService } from '../../../services/auth.service';
 import { Etudiant } from '../../../models/etudiant';
@@ -7,13 +7,19 @@ import { Etudiant } from '../../../models/etudiant';
 @Component({
   selector: 'app-etudiants-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule],
+  imports: [FormsModule, ReactiveFormsModule],
   template: `
     <div class="page-header">
       <div>
         <h1 class="page-title">Étudiants</h1>
         <p class="page-subtitle">{{ filtered().length }} étudiant(s) inscrit(s)</p>
       </div>
+      @if (auth.isAdmin()) {
+        <button class="btn btn-primary" (click)="openAddModal()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          Nouveau Étudiant
+        </button>
+      }
     </div>
 
     <div class="filters-bar">
@@ -41,10 +47,11 @@ import { Etudiant } from '../../../models/etudiant';
       </div>
     } @else if (filtered().length === 0) {
       <div class="empty-state">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5">
-          <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
-          <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
-        </svg>
+        <div class="icon-wrapper">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+        </div>
         <h3>Aucun étudiant trouvé</h3>
         <p>Essayez de modifier vos critères de recherche.</p>
       </div>
@@ -93,6 +100,77 @@ import { Etudiant } from '../../../models/etudiant';
         </table>
       </div>
     }
+
+    <!-- Modal Ajouter Etudiant -->
+    @if (showAddModal()) {
+      <div class="modal-backdrop" (click)="closeAddModal()" role="dialog" aria-modal="true" aria-labelledby="add-modal-title">
+        <div class="modal add-modal" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <div class="modal-title-wrap">
+              <div class="modal-icon-badge">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+              </div>
+              <div>
+                <h2 id="add-modal-title" style="margin:0;font-size:1.1rem;font-weight:700;color:#0f172a">Nouvel Étudiant</h2>
+                <p style="margin:0.15rem 0 0;font-size:0.78rem;color:#94a3b8">Ajouter un étudiant au système</p>
+              </div>
+            </div>
+            <button class="btn btn-ghost btn-sm btn-icon" (click)="closeAddModal()" aria-label="Fermer la modale">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="addForm" (ngSubmit)="submitAdd()" novalidate>
+              <div class="field-group centered-field">
+                <label class="field-label" for="matricule">Matricule</label>
+                <input id="matricule" type="text" class="field-input" formControlName="matricule"/>
+              </div>
+              <div class="field-group centered-field">
+                <label class="field-label" for="filiere">Filière</label>
+                <input id="filiere" type="text" class="field-input" formControlName="filiere"/>
+              </div>
+              <div class="field-group centered-field">
+                <label class="field-label" for="niveau">Niveau</label>
+                <div class="select-wrap">
+                  <select id="niveau" class="field-input" formControlName="niveau">
+                    <option value="L1">Licence 1</option>
+                    <option value="L2">Licence 2</option>
+                    <option value="L3">Licence 3</option>
+                    <option value="M1">Master 1</option>
+                    <option value="M2">Master 2</option>
+                  </select>
+                  <svg class="select-arrow" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+                </div>
+              </div>
+              <div class="field-group centered-field">
+                <label class="field-label" for="telephone">Téléphone</label>
+                <input id="telephone" type="text" class="field-input" formControlName="telephone"/>
+              </div>
+              <div class="field-group centered-field">
+                <label class="field-label" for="cv">CV (Sélectionner un fichier)</label>
+                <input id="cv" type="file" class="field-input" formControlName="cv"/>
+              </div>
+
+              @if (addError()) {
+                <div class="alert-error" role="alert">{{ addError() }}</div>
+              }
+
+              <div class="modal-actions">
+                <button type="button" class="btn btn-ghost" (click)="closeAddModal()">Annuler</button>
+                <button type="submit" class="btn btn-primary" [disabled]="addForm.invalid || addLoading()">
+                  @if (addLoading()) {
+                    <span class="spinner" style="width:14px;height:14px;border-width:2px"></span>
+                  } @else {
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                  }
+                  Enregistrer
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    }
   `,
   styles: [`
     .filters-bar { display:flex; gap:0.75rem; margin-bottom:1.25rem; flex-wrap:wrap; }
@@ -106,16 +184,82 @@ import { Etudiant } from '../../../models/etudiant';
     .avatar-sm { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#4f46e5,#7c3aed); display:flex; align-items:center; justify-content:center; color:white; font-weight:700; font-size:0.72rem; flex-shrink:0; }
     .fw-semibold { font-weight:600; }
     .text-muted { color:#6b7280; }
+
+    /* ── Modal Styles ── */
+    .add-modal { max-width:520px; width:95%; }
+    .modal-title-wrap { display:flex; align-items:center; gap:0.875rem; }
+    .modal-icon-badge { width:40px; height:40px; border-radius:12px; background:linear-gradient(135deg,#6366f1,#818cf8); display:flex; align-items:center; justify-content:center; color:#fff; flex-shrink:0; }
+    .field-group { display:flex; flex-direction:column; gap:0.4rem; margin-bottom:1.1rem; }
+    .centered-field { max-width:400px; margin-left:auto; margin-right:auto; }
+    .field-label { font-size:0.82rem; font-weight:600; color:#374151; }
+    .field-input { padding:0.6rem 0.875rem; border:1.5px solid #e5e7eb; border-radius:10px; font-size:0.875rem; font-family:inherit; color:#0f172a; outline:none; transition:border-color 0.15s; width:100%; box-sizing:border-box; background:#fff; &:focus { border-color:#6366f1; box-shadow:0 0 0 3px rgba(99,102,241,0.1); } }
+    .select-wrap { position:relative; }
+    .select-wrap select { appearance:none; padding-right:2.2rem; cursor:pointer; }
+    .select-arrow { position:absolute; right:0.75rem; top:50%; transform:translateY(-50%); pointer-events:none; color:#94a3b8; }
+    .alert-error { background:#fef2f2; border:1px solid #fecaca; border-radius:10px; padding:0.75rem 1rem; font-size:0.82rem; color:#dc2626; margin-bottom:1rem; }
+    .modal-actions { display:flex; justify-content:center; gap:0.75rem; padding-top:0.5rem; border-top:1px solid #f1f5f9; margin-top:0.5rem; }
   `]
 })
 export class EtudiantsListComponent implements OnInit {
   private svc   = inject(EtudiantService);
+  private fb    = inject(FormBuilder);
   protected auth = inject(AuthService);
 
   all         = signal<Etudiant[]>([]);
   loading     = signal(true);
   searchTerm  = '';
   filterNiveau = '';
+
+  /* ── Add modal state ── */
+  showAddModal = signal(false);
+  addLoading   = signal(false);
+  addError     = signal<string | null>(null);
+
+  addForm: FormGroup = this.fb.group({
+    matricule: ['', Validators.required],
+    filiere:   ['', Validators.required],
+    niveau:    ['L1', Validators.required],
+    telephone: [''],
+    cv:        ['']
+  });
+
+  openAddModal() {
+    this.addForm.reset({ niveau: 'L1' });
+    this.addError.set(null);
+    this.showAddModal.set(true);
+  }
+
+  closeAddModal() {
+    this.showAddModal.set(false);
+  }
+
+  submitAdd() {
+    if (this.addForm.invalid) {
+      this.addForm.markAllAsTouched();
+      return;
+    }
+    this.addLoading.set(true);
+    this.addError.set(null);
+    // Dans un vrai projet, il faudrait aussi envoyer les infos de l'utilisateur (nom, prenom, email)
+    // Ici, on simule l'ajout direct via le service existant
+    const payload = this.addForm.value;
+    
+    // Simulate creation for now as we don't have a specific endpoint for full creation in the service here easily without user details
+    setTimeout(() => {
+        const newEtudiant: Etudiant = {
+            id: Date.now(),
+            matricule: payload.matricule,
+            filiere: payload.filiere,
+            niveau: payload.niveau,
+            telephone: payload.telephone,
+            cv: payload.cv,
+            utilisateur: { id: Date.now()+1, nom: 'Nouveau', prenom: 'Etudiant', email: `nouveau.${Date.now()}@test.com`, role: 'ETUDIANT' }
+        };
+        this.all.update(list => [newEtudiant, ...list]);
+        this.addLoading.set(false);
+        this.closeAddModal();
+    }, 500);
+  }
 
   filtered = computed(() => {
     const term = this.searchTerm.toLowerCase();

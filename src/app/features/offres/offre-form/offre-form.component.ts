@@ -71,7 +71,7 @@ import { AuthService } from '../../../services/auth.service';
 
               <div class="form-group" style="margin-bottom: 1.25rem;">
                 <label class="form-label" for="comp">Compétences requises *</label>
-                <input id="comp" type="text" class="form-control" formControlName="competencesRequises" placeholder="Ex: Angular, Spring Boot, MySQL, Git"/>
+                <input id="comp" type="text" class="form-control" formControlName="competencesRequises" placeholder="Ex: Angular,reactjs, Spring Boot, MySQL, Git"/>
                 @if (f['competencesRequises'].invalid && f['competencesRequises'].touched) {
                   <span class="form-error">Précisez au moins une compétence</span>
                 }
@@ -114,15 +114,15 @@ import { AuthService } from '../../../services/auth.service';
               <div class="form-group">
                 <label class="form-label" for="statut">Statut de publication</label>
                 <select id="statut" class="form-select" formControlName="statut">
-                  <option value="OUVERTE">Ouverte (Visible par les étudiants)</option>
-                  <option value="FERMEE">Fermée (Masquée / Archivée)</option>
+                  <option value="OUVERTE">Ouverte </option>
+                  <option value="FERMEE">Fermée </option>
                 </select>
               </div>
             </div>
 
           </div>
 
-          <div class="form-card-footer">
+          <div class="form-card-footer" style="display: flex; justify-content: center; gap: 1rem;">
             <a routerLink=".." class="btn btn-outline">Annuler</a>
             <button type="submit" class="btn btn-primary btn-lg" [disabled]="loading()">
               @if (loading()) {

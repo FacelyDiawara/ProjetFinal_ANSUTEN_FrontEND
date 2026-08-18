@@ -9,12 +9,12 @@ export const routes: Routes = [
   },
   {
     path: 'auth/login',
-    // canActivate: [guestGuard],
+    canActivate: [guestGuard],
     loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent)
   },
   {
     path: 'auth/register',
-    // canActivate: [guestGuard],
+    canActivate: [guestGuard],
     loadComponent: () => import('./features/auth/register/register.component').then(m => m.RegisterComponent)
   },
 
@@ -31,7 +31,7 @@ export const routes: Routes = [
   // ── Admin ────────────────────────────────────────────────────────────
   {
     path: 'admin',
-    // canActivate: [authGuard, adminGuard],
+    canActivate: [authGuard, adminGuard],
     loadComponent: () => import('./layout/layout.component').then(m => m.LayoutComponent),
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -60,6 +60,14 @@ export const routes: Routes = [
         loadComponent: () => import('./features/candidatures/candidatures-list/candidatures-list.component').then(m => m.CandidaturesListComponent)
       },
       {
+        path: 'candidatures/nouvelle',
+        loadComponent: () => import('./features/candidatures/candidature-form/candidature-form.component').then(m => m.CandidatureFormComponent)
+      },
+      {
+        path: 'candidatures/:id/modifier',
+        loadComponent: () => import('./features/candidatures/candidature-form/candidature-form.component').then(m => m.CandidatureFormComponent)
+      },
+      {
         path: 'etudiants',
         loadComponent: () => import('./features/etudiants/etudiants-list/etudiants-list.component').then(m => m.EtudiantsListComponent)
       },
@@ -77,7 +85,7 @@ export const routes: Routes = [
   // ── Entreprise ───────────────────────────────────────────────────────
   {
     path: 'entreprise',
-    // canActivate: [authGuard, entrepriseGuard],
+    canActivate: [authGuard, entrepriseGuard],
     loadComponent: () => import('./layout/layout.component').then(m => m.LayoutComponent),
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -115,7 +123,7 @@ export const routes: Routes = [
   // ── Étudiant ─────────────────────────────────────────────────────────
   {
     path: 'etudiant',
-    // canActivate: [authGuard, etudiantGuard],
+    canActivate: [authGuard, etudiantGuard],
     loadComponent: () => import('./layout/layout.component').then(m => m.LayoutComponent),
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },

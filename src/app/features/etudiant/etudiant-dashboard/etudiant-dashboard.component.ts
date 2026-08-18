@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, inject, signal, computed, OnInit } 
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { CandidatureService } from '../../../services/candidature.service';
-import { OffreStageService } from '../../../services/offre-stage.service';
 import { Candidature } from '../../../models/candidature';
 
 @Component({
@@ -25,52 +24,153 @@ import { Candidature } from '../../../models/candidature';
 
     <!-- KPI Grid -->
     <div class="kpi-grid">
-      <div class="kpi-card bg-indigo">
-        <div class="kpi-top">
-          <div class="kpi-icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/></svg>
-          </div>
-          <span class="kpi-badge">Total</span>
+      <!-- Total -->
+      <div class="kpi-card">
+        <div class="kpi-accent" style="background:linear-gradient(180deg,#6366f1,#818cf8)"></div>
+        <div class="kpi-icon-wrap" style="background:#eef2ff;color:#6366f1">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM8 17h8v1H8v-1zm0-3h8v1H8v-1zm0-3h5v1H8v-1z"/></svg>
         </div>
-        <div class="kpi-value">{{ candidatures().length }}</div>
-        <div class="kpi-label">Mes Candidatures</div>
-        <div class="kpi-decor"></div>
+        <div class="kpi-body">
+          <div class="kpi-num">{{ candidatures().length }}</div>
+          <div class="kpi-title">Mes Candidatures</div>
+          <div class="kpi-sub">Total soumises</div>
+        </div>
       </div>
 
-      <div class="kpi-card bg-amber">
-        <div class="kpi-top">
-          <div class="kpi-icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-          </div>
-          <span class="kpi-badge">En cours</span>
+      <!-- En attente -->
+      <div class="kpi-card">
+        <div class="kpi-accent" style="background:linear-gradient(180deg,#f59e0b,#fbbf24)"></div>
+        <div class="kpi-icon-wrap" style="background:#fffbeb;color:#f59e0b">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
         </div>
-        <div class="kpi-value">{{ enAttente() }}</div>
-        <div class="kpi-label">En Attente de réponse</div>
-        <div class="kpi-decor"></div>
+        <div class="kpi-body">
+          <div class="kpi-num">{{ enAttente() }}</div>
+          <div class="kpi-title">En attente</div>
+          <div class="kpi-sub">En cours de traitement</div>
+        </div>
       </div>
 
-      <div class="kpi-card bg-emerald">
-        <div class="kpi-top">
-          <div class="kpi-icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-          </div>
-          <span class="kpi-badge">Retenues</span>
+      <!-- Acceptées -->
+      <div class="kpi-card">
+        <div class="kpi-accent" style="background:linear-gradient(180deg,#10b981,#34d399)"></div>
+        <div class="kpi-icon-wrap" style="background:#ecfdf5;color:#10b981">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
         </div>
-        <div class="kpi-value">{{ acceptees() }}</div>
-        <div class="kpi-label">Candidatures Acceptées</div>
-        <div class="kpi-decor"></div>
+        <div class="kpi-body">
+          <div class="kpi-num">{{ acceptees() }}</div>
+          <div class="kpi-title">Acceptées</div>
+          <div class="kpi-sub">Candidatures retenues</div>
+        </div>
       </div>
 
-      <div class="kpi-card bg-danger">
-        <div class="kpi-top">
-          <div class="kpi-icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-          </div>
-          <span class="kpi-badge">Refusées</span>
+      <!-- Rejetées -->
+      <div class="kpi-card">
+        <div class="kpi-accent" style="background:linear-gradient(180deg,#ef4444,#f87171)"></div>
+        <div class="kpi-icon-wrap" style="background:#fef2f2;color:#ef4444">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/></svg>
         </div>
-        <div class="kpi-value">{{ rejetees() }}</div>
-        <div class="kpi-label">Candidatures Non retenues</div>
-        <div class="kpi-decor"></div>
+        <div class="kpi-body">
+          <div class="kpi-num">{{ rejetees() }}</div>
+          <div class="kpi-title">Non retenues</div>
+          <div class="kpi-sub">Candidatures refusées</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Analytics Row -->
+    <div class="analytics-row">
+      <!-- Donut Chart -->
+      <div class="analytics-card donut-card">
+        <div class="analytics-header">
+          <div>
+            <h3 class="analytics-title">Répartition</h3>
+            <p class="analytics-sub">Statuts de vos candidatures</p>
+          </div>
+        </div>
+        <div class="donut-area">
+          <svg viewBox="0 0 220 220" width="200" height="200" role="img" aria-label="Donut chart des candidatures">
+            <!-- Track -->
+            <circle cx="110" cy="110" r="80" fill="none" stroke="#f1f5f9" stroke-width="22"/>
+            @if (candidatures().length === 0) {
+              <circle cx="110" cy="110" r="80" fill="none" stroke="#e2e8f0" stroke-width="22" stroke-dasharray="502.65 502.65"/>
+            } @else {
+              <circle cx="110" cy="110" r="80" fill="none" stroke="#6366f1" stroke-width="22"
+                [attr.stroke-dasharray]="seg(candidatures().length - enAttente() - acceptees() - rejetees(), candidatures().length)"
+                [attr.stroke-dashoffset]="off(0)"
+                transform="rotate(-90 110 110)"/>
+              <circle cx="110" cy="110" r="80" fill="none" stroke="#f59e0b" stroke-width="22"
+                [attr.stroke-dasharray]="seg(enAttente(), candidatures().length)"
+                [attr.stroke-dashoffset]="off(candidatures().length - enAttente() - acceptees() - rejetees())"
+                transform="rotate(-90 110 110)"/>
+              <circle cx="110" cy="110" r="80" fill="none" stroke="#10b981" stroke-width="22"
+                [attr.stroke-dasharray]="seg(acceptees(), candidatures().length)"
+                [attr.stroke-dashoffset]="off(candidatures().length - acceptees() - rejetees())"
+                transform="rotate(-90 110 110)"/>
+              <circle cx="110" cy="110" r="80" fill="none" stroke="#ef4444" stroke-width="22"
+                [attr.stroke-dasharray]="seg(rejetees(), candidatures().length)"
+                [attr.stroke-dashoffset]="off(candidatures().length - rejetees())"
+                transform="rotate(-90 110 110)"/>
+            }
+            <!-- Center text -->
+            <text x="110" y="103" text-anchor="middle" font-size="32" font-weight="800" fill="#0f172a" font-family="Inter,sans-serif">{{ candidatures().length }}</text>
+            <text x="110" y="124" text-anchor="middle" font-size="11" fill="#94a3b8" font-family="Inter,sans-serif" letter-spacing="1">TOTAL</text>
+          </svg>
+        </div>
+        <div class="donut-chips">
+          <div class="chip"><span class="chip-dot" style="background:#f59e0b"></span>En attente <b>{{ enAttente() }}</b></div>
+          <div class="chip"><span class="chip-dot" style="background:#10b981"></span>Acceptées <b>{{ acceptees() }}</b></div>
+          <div class="chip"><span class="chip-dot" style="background:#ef4444"></span>Refusées <b>{{ rejetees() }}</b></div>
+        </div>
+      </div>
+
+      <!-- Progress Bars -->
+      <div class="analytics-card bars-card">
+        <div class="analytics-header">
+          <div>
+            <h3 class="analytics-title">Taux de succès</h3>
+            <p class="analytics-sub">Analyse de vos candidatures</p>
+          </div>
+        </div>
+        <div class="bars-list">
+          <div class="bar-row">
+            <div class="bar-meta">
+              <span class="bar-label">En attente de réponse</span>
+              <span class="bar-pct" style="color:#f59e0b">{{ pct(enAttente()) }}%</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" style="background:linear-gradient(90deg,#f59e0b,#fbbf24)" [style.width.%]="pct(enAttente())"></div>
+            </div>
+            <span class="bar-count">{{ enAttente() }} candidature{{ enAttente() > 1 ? 's' : '' }}</span>
+          </div>
+          <div class="bar-row">
+            <div class="bar-meta">
+              <span class="bar-label">Candidatures acceptées</span>
+              <span class="bar-pct" style="color:#10b981">{{ pct(acceptees()) }}%</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" style="background:linear-gradient(90deg,#10b981,#34d399)" [style.width.%]="pct(acceptees())"></div>
+            </div>
+            <span class="bar-count">{{ acceptees() }} candidature{{ acceptees() > 1 ? 's' : '' }}</span>
+          </div>
+          <div class="bar-row">
+            <div class="bar-meta">
+              <span class="bar-label">Candidatures refusées</span>
+              <span class="bar-pct" style="color:#ef4444">{{ pct(rejetees()) }}%</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" style="background:linear-gradient(90deg,#ef4444,#f87171)" [style.width.%]="pct(rejetees())"></div>
+            </div>
+            <span class="bar-count">{{ rejetees() }} candidature{{ rejetees() > 1 ? 's' : '' }}</span>
+          </div>
+        </div>
+
+        <div class="success-score">
+          <div class="score-label">Score de succès</div>
+          <div class="score-value" style="color:#10b981">
+            {{ candidatures().length > 0 ? pct(acceptees()) : 0 }}%
+          </div>
+          <div class="score-desc">des candidatures acceptées</div>
+        </div>
       </div>
     </div>
 
@@ -121,25 +221,61 @@ import { Candidature } from '../../../models/candidature';
     </div>
   `,
   styles: [`
-    .kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1.25rem; margin-bottom:2rem; }
-    .kpi-card { 
-      display:flex; flex-direction:column; padding:1.5rem; border-radius:20px; color:white; position:relative; overflow:hidden; 
-      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
-      transition:transform 0.25s, box-shadow 0.25s; 
-      &:hover{ transform:translateY(-4px); box-shadow:0 15px 35px rgba(0,0,0,0.18); } 
+    /* ── KPI Cards ── */
+    .kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:1rem; margin-bottom:1.5rem; }
+    .kpi-card {
+      background:#fff; border-radius:16px; border:1px solid #f1f5f9;
+      box-shadow:0 2px 12px rgba(0,0,0,0.06);
+      display:flex; align-items:center; gap:1rem; padding:1.25rem 1.25rem 1.25rem 0;
+      position:relative; overflow:hidden;
+      transition:transform 0.2s, box-shadow 0.2s;
+      &:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,0.1); }
     }
+    .kpi-accent { width:5px; align-self:stretch; border-radius:0 4px 4px 0; flex-shrink:0; }
+    .kpi-icon-wrap {
+      width:46px; height:46px; border-radius:14px; flex-shrink:0;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .kpi-body { flex:1; }
+    .kpi-num { font-size:2rem; font-weight:800; color:#0f172a; line-height:1; font-family:'Inter',sans-serif; letter-spacing:-0.04em; }
+    .kpi-title { font-size:0.85rem; font-weight:600; color:#334155; margin-top:0.2rem; }
+    .kpi-sub { font-size:0.72rem; color:#94a3b8; margin-top:0.1rem; }
 
-    .bg-indigo { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); }
-    .bg-emerald{ background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-    .bg-amber  { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
-    .bg-danger { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+    /* ── Analytics Row ── */
+    .analytics-row { display:grid; grid-template-columns:1fr 1.6fr; gap:1rem; margin-bottom:1.5rem; }
+    @media(max-width:768px){ .analytics-row { grid-template-columns:1fr; } }
+    .analytics-card {
+      background:#fff; border-radius:16px; border:1px solid #f1f5f9;
+      box-shadow:0 2px 12px rgba(0,0,0,0.06); padding:1.5rem;
+    }
+    .analytics-header { margin-bottom:1rem; }
+    .analytics-title { font-size:0.95rem; font-weight:700; color:#0f172a; margin:0; }
+    .analytics-sub { font-size:0.75rem; color:#94a3b8; margin:0.2rem 0 0; }
 
-    .kpi-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; }
-    .kpi-icon { width:44px; height:44px; border-radius:14px; background:rgba(255,255,255,0.2); backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:center; }
-    .kpi-badge { font-size:0.75rem; font-weight:700; background:rgba(255,255,255,0.22); padding:0.25rem 0.65rem; border-radius:9999px; }
-    .kpi-value { font-size:2.25rem; font-weight:800; line-height:1; margin-bottom:0.35rem; font-family:'Plus Jakarta Sans',sans-serif; letter-spacing:-0.03em; }
-    .kpi-label { font-size:0.78rem; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; opacity:0.85; }
-    .kpi-decor { position:absolute; width:100px; height:100px; border-radius:50%; background:rgba(255,255,255,0.07); bottom:-25px; right:-25px; pointer-events:none; }
+    /* Donut */
+    .donut-area { display:flex; justify-content:center; margin:0.5rem 0; }
+    .donut-chips { display:flex; flex-wrap:wrap; gap:0.5rem; justify-content:center; }
+    .chip { display:flex; align-items:center; gap:0.4rem; font-size:0.78rem; color:#475569; background:#f8fafc; border:1px solid #e2e8f0; padding:0.3rem 0.7rem; border-radius:9999px; }
+    .chip-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+    .chip b { color:#0f172a; font-weight:700; }
+
+    /* Bars */
+    .bars-list { display:flex; flex-direction:column; gap:1.4rem; }
+    .bar-row {}
+    .bar-meta { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.45rem; }
+    .bar-label { font-size:0.8rem; font-weight:500; color:#475569; }
+    .bar-pct { font-size:0.8rem; font-weight:700; }
+    .bar-track { height:8px; background:#f1f5f9; border-radius:9999px; overflow:hidden; }
+    .bar-fill { height:100%; border-radius:9999px; transition:width 0.8s cubic-bezier(0.4,0,0.2,1); }
+    .bar-count { font-size:0.72rem; color:#94a3b8; margin-top:0.3rem; display:block; }
+
+    .success-score {
+      margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid #f1f5f9;
+      display:flex; align-items:center; gap:1rem;
+    }
+    .score-label { font-size:0.78rem; color:#64748b; font-weight:500; flex:1; }
+    .score-value { font-size:1.6rem; font-weight:800; font-family:'Inter',sans-serif; letter-spacing:-0.03em; }
+    .score-desc { font-size:0.72rem; color:#94a3b8; }
   `]
 })
 export class EtudiantDashboardComponent implements OnInit {
@@ -152,6 +288,24 @@ export class EtudiantDashboardComponent implements OnInit {
   enAttente = computed(() => this.candidatures().filter(c => c.statut === 'EN_ATTENTE').length);
   acceptees = computed(() => this.candidatures().filter(c => c.statut === 'ACCEPTEE').length);
   rejetees  = computed(() => this.candidatures().filter(c => c.statut === 'REJETEE').length);
+
+  private readonly C = 2 * Math.PI * 80; // circumference for r=80
+
+  seg(count: number, total: number): string {
+    if (total === 0) return `0 ${this.C}`;
+    return `${(count / total) * this.C} ${this.C}`;
+  }
+
+  off(preceding: number): string {
+    const total = this.candidatures().length;
+    if (total === 0) return '0';
+    return `${-(preceding / total) * this.C}`;
+  }
+
+  pct(count: number): number {
+    const total = this.candidatures().length;
+    return total === 0 ? 0 : Math.round((count / total) * 100);
+  }
 
   userName() { const u = this.auth.currentUser(); return u ? `${u.prenom} ${u.nom}` : 'Étudiant'; }
 

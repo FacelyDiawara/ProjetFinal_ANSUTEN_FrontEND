@@ -219,21 +219,21 @@ h1, h2, h3, h4, h5, h6 {
 
 .form-card-header {
   padding: 1.75rem 2rem;
-  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-  color: white;
+  background: white;
+  border-bottom: 1px solid var(--gray-100);
   display: flex;
   align-items: center;
   justify-content: space-between;
 
   h2 {
-    font-size: 1.35rem;
-    font-weight: 700;
-    color: white;
-    margin-bottom: 0.25rem;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--gray-900);
+    margin-bottom: 0.15rem;
   }
   p {
-    font-size: 0.875rem;
-    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
+    color: var(--gray-500);
   }
 }
 
@@ -241,12 +241,11 @@ h1, h2, h3, h4, h5, h6 {
   width: 48px;
   height: 48px;
   border-radius: var(--radius);
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(8px);
+  background: var(--primary-soft);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: var(--primary);
   flex-shrink: 0;
 }
 
@@ -296,11 +295,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .form-label {
-  font-size: 0.8rem;
-  font-weight: 700;
+  font-size: 0.85rem;
+  font-weight: 600;
   color: var(--gray-700);
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
+  margin-bottom: 0.1rem;
 }
 
 .form-control {

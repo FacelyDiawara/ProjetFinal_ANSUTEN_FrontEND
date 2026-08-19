@@ -365,11 +365,12 @@ export class LoginComponent {
     this.errorMsg.set(null);
 
     this.auth.login(this.form.getRawValue() as any).subscribe({
-      next: res => {
-        const role = res.utilisateur?.role || (res as any)?.user?.role || 'ETUDIANT';
-        if (role === 'ADMIN')      this.router.navigate(['/admin/dashboard']);
+      next: () => {
+        // Role is already parsed and stored by saveSession — use the service's computed signal
+        const role = this.auth.role();
+        if (role === 'ADMIN')           this.router.navigate(['/admin/dashboard']);
         else if (role === 'ENTREPRISE') this.router.navigate(['/entreprise/dashboard']);
-        else                       this.router.navigate(['/etudiant/dashboard']);
+        else                            this.router.navigate(['/etudiant/dashboard']);
       },
       error: err => {
         this.loading.set(false);

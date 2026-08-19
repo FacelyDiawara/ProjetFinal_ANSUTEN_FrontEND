@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject, signal, computed, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DatePipe, SlicePipe } from '@angular/common';
 import { OffreStageService } from '../../services/offre-stage.service';
 import { OffreStage } from '../../models/offre-stage';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -29,8 +30,13 @@ import { OffreStage } from '../../models/offre-stage';
           <span class="brand-name">UniStage</span>
         </div>
         <nav class="hero-nav">
-          <a routerLink="/auth/login" class="btn btn-ghost-white">Connexion</a>
-          <a routerLink="/auth/register" class="btn btn-white">S'inscrire</a>
+          @if (isLoggedIn()) {
+            <a [routerLink]="dashboardLink()" class="btn btn-white">Mon espace</a>
+            <button class="btn btn-ghost-white" (click)="onLogout()">Déconnexion</button>
+          } @else {
+            <a routerLink="/auth/login" class="btn btn-ghost-white">Connexion</a>
+            <a routerLink="/auth/register" class="btn btn-white">S'inscrire</a>
+          }
         </nav>
       </div>
       <div class="hero-content">
@@ -230,7 +236,18 @@ import { OffreStage } from '../../models/offre-stage';
   `]
 })
 export class HomeComponent implements OnInit {
-  private svc = inject(OffreStageService);
+  private svc    = inject(OffreStageService);
+  private auth   = inject(AuthService);
+  private router = inject(Router);
+
+  isLoggedIn = this.auth.isLoggedIn;
+
+  dashboardLink = computed(() => {
+    const role = this.auth.role();
+    if (role === 'ADMIN') return '/admin/dashboard';
+    if (role === 'ENTREPRISE') return '/entreprise/dashboard';
+    return '/etudiant/dashboard';
+  });
 
   offres     = signal<OffreStage[]>([]);
   loading    = signal(true);
@@ -263,5 +280,9 @@ export class HomeComponent implements OnInit {
 
   skills(o: OffreStage) {
     return o.competencesRequises.split(',').map(s => s.trim()).slice(0, 3);
+  }
+
+  onLogout(): void {
+    this.auth.logout();
   }
 }

@@ -34,15 +34,16 @@ import { AuthService } from '../../../services/auth.service';
           </div>
         </div>
 
-        <div class="card" style="margin-top:1rem; padding:1.25rem;">
-          <h4 style="font-size:0.85rem; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:1rem;">
-            ✅ Compléter votre profil
-          </h4>
-          <ul style="list-style:none; display:flex; flex-direction:column; gap:0.625rem;">
+        <div class="card profil-tips-card">
+          <div class="tips-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <h4>Compléter votre profil</h4>
+          </div>
+          <ul class="tips-list">
             @for (tip of profileTips; track tip) {
-              <li style="display:flex; align-items:center; gap:0.5rem; font-size:0.8rem; color:#64748b;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                {{ tip }}
+              <li>
+                <div class="tip-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+                <span>{{ tip }}</span>
               </li>
             }
           </ul>
@@ -158,17 +159,24 @@ import { AuthService } from '../../../services/auth.service';
     .profil-layout { display:grid; grid-template-columns:280px 1fr; gap:1.75rem; align-items:start; }
     @media(max-width:900px) { .profil-layout { grid-template-columns:1fr; } }
 
-    .profil-id-card { padding:2rem; text-align:center; }
-    .profil-avatar-wrap { display:flex; flex-direction:column; align-items:center; gap:0.5rem; padding-bottom:1.25rem; border-bottom:1px dashed #e2e8f0; margin-bottom:1.25rem; }
-    .profil-avatar-ring { padding:4px; border-radius:50%; background:linear-gradient(135deg,#06b6d4,#0284c7); box-shadow:0 8px 20px rgba(6,182,212,0.3); margin-bottom:0.5rem; }
-    .profil-avatar { width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg,#06b6d4,#0284c7); display:flex; align-items:center; justify-content:center; color:white; font-size:1.75rem; font-weight:800; border:3px solid white; }
-    .profil-name { font-size:1.1rem; font-weight:800; color:#0f172a; }
-    .profil-email { font-size:0.78rem; color:#64748b; }
+    .profil-id-card { padding:2.5rem 2rem; text-align:center; position: relative; overflow: hidden; border: none; }
+    .profil-id-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 100px; background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); z-index: 0; }
+    .profil-avatar-wrap { position: relative; z-index: 1; display:flex; flex-direction:column; align-items:center; gap:0.5rem; padding-bottom:1.5rem; border-bottom:1px dashed #e2e8f0; margin-bottom:1.5rem; }
+    .profil-avatar-ring { padding:5px; border-radius:50%; background:white; box-shadow:0 8px 20px rgba(6,182,212,0.15); margin-bottom:0.75rem; }
+    .profil-avatar { width:88px; height:88px; border-radius:50%; background:linear-gradient(135deg,#06b6d4,#0284c7); display:flex; align-items:center; justify-content:center; color:white; font-size:2rem; font-weight:800; border:4px solid white; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
+    .profil-name { font-size:1.25rem; font-weight:800; color:#0f172a; margin-top: 0.25rem; }
+    .profil-email { font-size:0.85rem; color:#64748b; }
 
-    .profil-status { display:flex; justify-content:center; }
-    .status-indicator { display:inline-flex; align-items:center; gap:0.4rem; font-size:0.78rem; color:#059669; font-weight:600; background:#ecfdf5; padding:0.3rem 0.75rem; border-radius:9999px; }
-    .status-dot { width:7px; height:7px; border-radius:50%; background:#10b981; animation:pulse 2s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .profil-status { display:flex; justify-content:center; position: relative; z-index: 1; }
+    .status-indicator { display:inline-flex; align-items:center; gap:0.5rem; font-size:0.8rem; color:#047857; font-weight:700; background:#d1fae5; padding:0.4rem 1rem; border-radius:9999px; }
+    .status-dot { width:8px; height:8px; border-radius:50%; background:#10b981; animation:pulse 2s infinite; box-shadow: 0 0 0 3px rgba(16,185,129,0.2); }
+    @keyframes pulse { 0%,100%{opacity:1; transform:scale(1)} 50%{opacity:0.6; transform:scale(1.1)} }
+
+    .profil-tips-card { margin-top:1.25rem; padding:1.5rem; border: none; background: #f8fafc; }
+    .tips-header { display:flex; align-items:center; gap:0.5rem; margin-bottom:1.25rem; color:#0f172a; h4 { font-size:0.9rem; font-weight:700; margin:0; } svg { color:#10b981; } }
+    .tips-list { list-style:none; display:flex; flex-direction:column; gap:0.875rem; }
+    .tips-list li { display:flex; align-items:flex-start; gap:0.75rem; font-size:0.85rem; color:#475569; line-height:1.4; }
+    .tip-check { flex-shrink:0; width:18px; height:18px; border-radius:50%; background:#d1fae5; color:#059669; display:flex; align-items:center; justify-content:center; margin-top: 0.1rem; }
 
     .profil-main { display:flex; flex-direction:column; }
   `]

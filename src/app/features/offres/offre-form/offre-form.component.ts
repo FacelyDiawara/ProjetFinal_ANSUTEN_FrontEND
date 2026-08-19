@@ -173,15 +173,26 @@ export class OffreFormComponent implements OnInit {
     this.errorMsg.set(null);
 
     const id  = this.route.snapshot.paramMap.get('id');
+    const rawValue = this.form.getRawValue() as Record<string, unknown>;
+
+    // Inject entrepriseId from the logged-in user (required by the backend)
+    const user = this.auth.currentUser();
+    if (!this.isEdit() && user?.id) {
+      rawValue['entrepriseId'] = user.id;
+    }
+
     const req = this.isEdit()
-      ? this.svc.update(+id!, this.form.getRawValue() as never)
-      : this.svc.create(this.form.getRawValue() as never);
+      ? this.svc.update(+id!, rawValue as never)
+      : this.svc.create(rawValue as never);
 
     req.subscribe({
-      next: () => this.router.navigate(['..'], { relativeTo: this.route }),
+      next: () => {
+        this.loading.set(false);
+        this.router.navigate(['..'], { relativeTo: this.route });
+      },
       error: err => {
         this.loading.set(false);
-        this.errorMsg.set(err.error?.message ?? "Erreur lors de l'enregistrement.");
+        this.errorMsg.set(err.error?.message ?? err.message ?? "Erreur lors de l'enregistrement. Vérifiez que le backend est démarré.");
       }
     });
   }

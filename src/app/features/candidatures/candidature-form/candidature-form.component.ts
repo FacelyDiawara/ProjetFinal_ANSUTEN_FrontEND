@@ -229,15 +229,17 @@ export class CandidatureFormComponent implements OnInit {
       // POST new candidature
       this.svc.postuler({
         offreStageId: +val.offreStageId!,
+        etudiantId: val.etudiantId ? +val.etudiantId : undefined,
         lettreMotivation: val.lettreMotivation!,
-        // We'd ideally pass etudiantId if the backend allows admins to create on behalf of students,
-        // but the standard postuler endpoint uses the logged-in user.
-        // We will just call postuler for now. 
+        dateSoumission: val.dateSoumission!,
+        statut: (val.statut as any) || 'EN_ATTENTE',
       }).subscribe({
         next: () => this.router.navigate(['..'], { relativeTo: this.route }),
         error: err => {
           this.loading.set(false);
-          this.errorMsg.set(err.error?.message ?? "Erreur lors de l'enregistrement.");
+          this.errorMsg.set(
+            err.error?.message ?? err.message ?? "Erreur lors de l'enregistrement. Vérifiez que le backend est démarré."
+          );
         }
       });
     }

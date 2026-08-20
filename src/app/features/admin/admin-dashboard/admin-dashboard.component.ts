@@ -26,98 +26,110 @@ import { DecimalPipe } from '@angular/common';
 
     <!-- KPI Grid -->
     <div class="kpi-grid">
-      <a routerLink="/admin/etudiants" class="kpi-card bg-indigo">
-        <div class="kpi-top">
-          <div class="kpi-icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+      <a routerLink="/admin/etudiants" class="kpi-card">
+        <div class="kpi-header">
+          <div class="kpi-title">Étudiants</div>
+          <div class="kpi-icon-wrap" style="background:#eef2ff;color:#6366f1">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
           </div>
-          <span class="kpi-badge">+12%</span>
         </div>
-        <div class="kpi-value">{{ etudiantCount() }}</div>
-        <div class="kpi-label">Étudiants Inscrits</div>
-        <div class="kpi-decor"></div>
+        <div class="kpi-num">{{ etudiantCount() }}</div>
+        <div class="kpi-sub">Comptes actifs</div>
       </a>
 
-      <a routerLink="/admin/entreprises" class="kpi-card bg-cyan">
-        <div class="kpi-top">
-          <div class="kpi-icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 7V3H2v18h20V7H12zm-2 12H4v-2h6v2zm0-4H4v-2h6v2zm0-4H4V9h6v2zm10 12h-8V9h8v10zm-2-8h-4v2h4v-2z"/></svg>
+      <a routerLink="/admin/entreprises" class="kpi-card">
+        <div class="kpi-header">
+          <div class="kpi-title">Entreprises</div>
+          <div class="kpi-icon-wrap" style="background:#f0f9ff;color:#0ea5e9">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 7V3H2v18h20V7H12zm-2 12H4v-2h6v2zm0-4H4v-2h6v2zm0-4H4V9h6v2zm10 12h-8V9h8v10zm-2-8h-4v2h4v-2z"/></svg>
           </div>
-          <span class="kpi-badge">Partenaires</span>
         </div>
-        <div class="kpi-value">{{ entrepriseCount() }}</div>
-        <div class="kpi-label">Entreprises Partenaires</div>
-        <div class="kpi-decor"></div>
+        <div class="kpi-num">{{ entrepriseCount() }}</div>
+        <div class="kpi-sub">Partenaires validés</div>
       </a>
 
-      <a routerLink="/admin/offres" class="kpi-card bg-emerald">
-        <div class="kpi-top">
-          <div class="kpi-icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM10 4h4v2h-4V4z"/></svg>
+      <a routerLink="/admin/offres" class="kpi-card">
+        <div class="kpi-header">
+          <div class="kpi-title">Offres de Stage</div>
+          <div class="kpi-icon-wrap" style="background:#ecfdf5;color:#10b981">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM10 4h4v2h-4V4z"/></svg>
           </div>
-          <span class="kpi-badge">Publiées</span>
         </div>
-        <div class="kpi-value">{{ offres().length }}</div>
-        <div class="kpi-label">Offres de Stage</div>
-        <div class="kpi-decor"></div>
+        <div class="kpi-num">{{ offres().length }}</div>
+        <div class="kpi-sub">Publiées sur UniStage</div>
       </a>
 
-      <a routerLink="/admin/candidatures" class="kpi-card bg-amber">
-        <div class="kpi-top">
-          <div class="kpi-icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/></svg>
+      <a routerLink="/admin/candidatures" class="kpi-card">
+        <div class="kpi-header">
+          <div class="kpi-title">Candidatures</div>
+          <div class="kpi-icon-wrap" style="background:#fffbeb;color:#f59e0b">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/></svg>
           </div>
-          <span class="kpi-badge">Soumises</span>
         </div>
-        <div class="kpi-value">{{ candidatures().length }}</div>
-        <div class="kpi-label">Total Candidatures</div>
-        <div class="kpi-decor"></div>
+        <div class="kpi-num">{{ candidatures().length }}</div>
+        <div class="kpi-sub">Total soumises</div>
       </a>
     </div>
 
     <!-- Content Sections -->
     <div class="dash-row">
-      <div class="card flex-2">
-        <div class="card-header">
+      <!-- Offres Analytics -->
+      <div class="admin-panel flex-2">
+        <div class="panel-header">
           <div>
-            <h3>Statut des Offres de Stage</h3>
-            <p class="text-muted" style="font-size:0.8rem">Répartition des offres ouvertes, fermées et archivées</p>
+            <h3 class="panel-title">Statut des Offres</h3>
+            <p class="panel-sub">Volume et répartition actuelle</p>
           </div>
-          <a routerLink="/admin/offres" class="btn btn-ghost btn-sm">Gérer les offres →</a>
+          <a routerLink="/admin/offres" class="btn btn-outline btn-sm">Gérer</a>
         </div>
-        <div class="card-body">
-          <div class="bar-list">
-            <div class="bar-item">
-              <span class="bar-lbl"><span class="dot" style="background:#10b981"></span>Offres Ouvertes</span>
-              <div class="bar-track"><div class="bar-fill" style="background:#10b981" [style.width.%]="pct(offres(),'OUVERTE')"></div></div>
-              <span class="bar-num">{{ count(offres(),'OUVERTE') }} ({{ pct(offres(),'OUVERTE') | number:'1.0-0' }}%)</span>
+        <div class="panel-body">
+          <div class="admin-bars">
+            <div class="a-bar-item">
+              <div class="a-bar-info">
+                <span class="a-bar-label"><span class="status-dot success"></span> Ouvertes</span>
+                <span class="a-bar-val">{{ count(offres(),'OUVERTE') }} <span style="font-size:0.8rem; color:#94a3b8; font-weight:600">({{ pct(offres(),'OUVERTE') | number:'1.0-0' }}%)</span></span>
+              </div>
+              <div class="a-bar-track"><div class="a-bar-fill success-grad" [style.width.%]="pct(offres(),'OUVERTE')"></div></div>
             </div>
-            <div class="bar-item">
-              <span class="bar-lbl"><span class="dot" style="background:#ef4444"></span>Offres Fermées</span>
-              <div class="bar-track"><div class="bar-fill" style="background:#ef4444" [style.width.%]="pct(offres(),'FERMEE')"></div></div>
-              <span class="bar-num">{{ count(offres(),'FERMEE') }} ({{ pct(offres(),'FERMEE') | number:'1.0-0' }}%)</span>
+            
+            <div class="a-bar-item">
+              <div class="a-bar-info">
+                <span class="a-bar-label"><span class="status-dot danger"></span> Fermées</span>
+                <span class="a-bar-val">{{ count(offres(),'FERMEE') }} <span style="font-size:0.8rem; color:#94a3b8; font-weight:600">({{ pct(offres(),'FERMEE') | number:'1.0-0' }}%)</span></span>
+              </div>
+              <div class="a-bar-track"><div class="a-bar-fill danger-grad" [style.width.%]="pct(offres(),'FERMEE')"></div></div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="card flex-1">
-        <div class="card-header">
-          <h3>Traitement Candidatures</h3>
+      <!-- Candidatures Analytics -->
+      <div class="admin-panel flex-1">
+        <div class="panel-header">
+          <h3 class="panel-title">Entonnoir Candidatures</h3>
         </div>
-        <div class="card-body">
-          <div class="cand-grid">
-            <div class="cand-box" style="background:#fffbeb; border:1px solid #fde68a">
-              <strong style="color:#d97706">{{ count(candidatures(),'EN_ATTENTE') }}</strong>
-              <span>En attente</span>
+        <div class="panel-body">
+          <div class="funnel-list">
+            <div class="funnel-item">
+              <div class="f-icon warning"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg></div>
+              <div class="f-details">
+                <span class="f-name">En attente</span>
+                <strong class="f-count">{{ count(candidatures(),'EN_ATTENTE') }}</strong>
+              </div>
             </div>
-            <div class="cand-box" style="background:#ecfdf5; border:1px solid #a7f3d0">
-              <strong style="color:#059669">{{ count(candidatures(),'ACCEPTEE') }}</strong>
-              <span>Acceptées</span>
+            <div class="funnel-item">
+              <div class="f-icon success"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+              <div class="f-details">
+                <span class="f-name">Acceptées</span>
+                <strong class="f-count">{{ count(candidatures(),'ACCEPTEE') }}</strong>
+              </div>
             </div>
-            <div class="cand-box" style="background:#fef2f2; border:1px solid #fecaca">
-              <strong style="color:#dc2626">{{ count(candidatures(),'REJETEE') }}</strong>
-              <span>Rejetées</span>
+            <div class="funnel-item">
+              <div class="f-icon danger"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/></svg></div>
+              <div class="f-details">
+                <span class="f-name">Rejetées</span>
+                <strong class="f-count">{{ count(candidatures(),'REJETEE') }}</strong>
+              </div>
             </div>
           </div>
         </div>
@@ -128,49 +140,76 @@ import { DecimalPipe } from '@angular/common';
     .live-dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981; animation: pulse-dot 2s infinite; }
     @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
-    .kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1.25rem; margin-bottom:2rem; }
-    .kpi-card { 
-      display:flex; 
-      flex-direction:column; 
-      padding:1.5rem; 
-      border-radius:20px; 
-      text-decoration:none; 
-      color:white; 
-      position:relative; 
-      overflow:hidden; 
-      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
-      transition:transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s; 
-      &:hover { transform:translateY(-4px); box-shadow:0 15px 35px rgba(0,0,0,0.18); } 
+    .kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1.25rem; margin-bottom:1.5rem; }
+    .kpi-card {
+      background:#fff; border-radius:14px; border:1px solid #e2e8f0;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+      padding: 1.25rem;
+      position:relative; overflow:hidden;
+      transition:transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+      text-decoration:none;
+      display:flex; flex-direction:column; gap:0.5rem;
+      &:hover { transform:translateY(-3px); box-shadow:0 10px 15px -3px rgba(0,0,0,0.05); border-color:#cbd5e1; }
     }
-    
-    .bg-indigo { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); }
-    .bg-cyan   { background: linear-gradient(135deg, #06b6d4 0%, #0284c7 100%); }
-    .bg-emerald{ background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-    .bg-amber  { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
-
-    .kpi-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; }
-    .kpi-icon { width:44px; height:44px; border-radius:14px; background:rgba(255,255,255,0.2); backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:center; }
-    .kpi-badge { font-size:0.7rem; font-weight:700; background:rgba(255,255,255,0.22); padding:0.25rem 0.65rem; border-radius:9999px; letter-spacing:0.03em; }
-    .kpi-value { font-size:2.25rem; font-weight:800; line-height:1; margin-bottom:0.35rem; font-family:'Plus Jakarta Sans',sans-serif; letter-spacing:-0.03em; }
-    .kpi-label { font-size:0.78rem; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; opacity:0.85; }
-    .kpi-decor { position:absolute; width:100px; height:100px; border-radius:50%; background:rgba(255,255,255,0.07); bottom:-25px; right:-25px; pointer-events:none; }
+    .kpi-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:0.25rem; }
+    .kpi-icon-wrap {
+      width:36px; height:36px; border-radius:10px;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .kpi-title { font-size:0.85rem; font-weight:600; color:#475569; }
+    .kpi-num { font-size:2rem; font-weight:800; color:#0f172a; line-height:1; font-family:'Plus Jakarta Sans',sans-serif; letter-spacing:-0.03em; }
+    .kpi-sub { font-size:0.75rem; color:#94a3b8; }
 
     .dash-row { display:grid; grid-template-columns:2fr 1fr; gap:1.25rem; }
     @media (max-width:900px) { .dash-row { grid-template-columns:1fr; } }
-
     .flex-2 { flex:2; }
     .flex-1 { flex:1; }
 
-    .bar-list { display:flex; flex-direction:column; gap:1.25rem; }
-    .bar-item { display:flex; align-items:center; gap:1rem; }
-    .bar-lbl { display:flex; align-items:center; gap:0.5rem; font-size:0.85rem; color:#475569; font-weight:600; min-width:130px; }
-    .dot { width:10px; height:10px; border-radius:50%; }
-    .bar-track { flex:1; height:10px; background:#f1f5f9; border-radius:9999px; overflow:hidden; }
-    .bar-fill { height:100%; border-radius:9999px; transition:width 0.8s ease; }
-    .bar-num { font-size:0.85rem; font-weight:700; color:#334155; min-width:85px; text-align:right; }
+    /* Admin Panels */
+    .admin-panel {
+      background:#fff; border-radius:16px;
+      box-shadow: 0 4px 20px -4px rgba(0,0,0,0.03);
+      border: 1px solid #e2e8f0;
+      display:flex; flex-direction:column;
+    }
+    .panel-header {
+      padding: 1.5rem 1.75rem; border-bottom: 1px solid #f1f5f9;
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    .panel-title { font-size:1.15rem; font-weight:800; color:#0f172a; margin-bottom:0.15rem; }
+    .panel-sub { font-size:0.85rem; color:#64748b; }
+    .panel-body { padding: 1.75rem; flex:1; }
 
-    .cand-grid { display:grid; grid-template-columns:1fr; gap:0.875rem; }
-    .cand-box { padding:1.1rem 1rem; border-radius:14px; text-align:center; display:flex; align-items:center; justify-content:space-between; strong { font-size:1.65rem; font-weight:800; font-family:'Plus Jakarta Sans',sans-serif; } span { font-size:0.8rem; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:#475569; } }
+    /* Progress Bars */
+    .admin-bars { display:flex; flex-direction:column; gap:1.75rem; }
+    .a-bar-info { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:0.6rem; }
+    .a-bar-label { display:flex; align-items:center; gap:0.6rem; font-size:0.95rem; font-weight:600; color:#334155; }
+    .a-bar-val { font-size:1.35rem; font-weight:800; font-family:'Plus Jakarta Sans',sans-serif; color:#0f172a; line-height:1; }
+    .status-dot { width:12px; height:12px; border-radius:50%; }
+    .status-dot.success { background:#10b981; box-shadow:0 0 0 4px rgba(16,185,129,0.15); }
+    .status-dot.danger { background:#ef4444; box-shadow:0 0 0 4px rgba(239,68,68,0.15); }
+    
+    .a-bar-track { height:14px; background:#f1f5f9; border-radius:99px; overflow:hidden; }
+    .a-bar-fill { height:100%; border-radius:99px; transition:width 1s cubic-bezier(0.4,0,0.2,1); }
+    .success-grad { background:linear-gradient(90deg, #10b981, #34d399); }
+    .danger-grad { background:linear-gradient(90deg, #ef4444, #f87171); }
+
+    /* Funnel List */
+    .funnel-list { display:flex; flex-direction:column; gap:1rem; }
+    .funnel-item {
+      display:flex; align-items:center; gap:1.25rem;
+      padding:1.1rem 1.25rem; border-radius:12px; border:1px solid #f1f5f9;
+      transition:all 0.2s;
+      background:#fff;
+    }
+    .funnel-item:hover { border-color:#cbd5e1; background:#f8fafc; transform:translateX(4px); box-shadow:0 4px 12px rgba(0,0,0,0.03); }
+    .f-icon { width:46px; height:46px; border-radius:12px; display:flex; align-items:center; justify-content:center; }
+    .f-icon.warning { background:#fffbeb; color:#d97706; }
+    .f-icon.success { background:#ecfdf5; color:#059669; }
+    .f-icon.danger { background:#fef2f2; color:#dc2626; }
+    .f-details { display:flex; flex-direction:column; }
+    .f-name { font-size:0.85rem; font-weight:600; color:#64748b; text-transform:uppercase; letter-spacing:0.05em; }
+    .f-count { font-size:1.4rem; font-weight:800; color:#0f172a; font-family:'Plus Jakarta Sans',sans-serif; line-height:1.2; }
   `]
 })
 export class AdminDashboardComponent implements OnInit {

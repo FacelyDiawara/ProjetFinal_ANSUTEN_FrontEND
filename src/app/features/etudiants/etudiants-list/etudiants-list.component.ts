@@ -240,25 +240,19 @@ export class EtudiantsListComponent implements OnInit {
     }
     this.addLoading.set(true);
     this.addError.set(null);
-    // Dans un vrai projet, il faudrait aussi envoyer les infos de l'utilisateur (nom, prenom, email)
-    // Ici, on simule l'ajout direct via le service existant
     const payload = this.addForm.value;
     
-    // Simulate creation for now as we don't have a specific endpoint for full creation in the service here easily without user details
-    setTimeout(() => {
-        const newEtudiant: Etudiant = {
-            id: Date.now(),
-            matricule: payload.matricule,
-            filiere: payload.filiere,
-            niveau: payload.niveau,
-            telephone: payload.telephone,
-            cv: payload.cv,
-            utilisateur: { id: Date.now()+1, nom: 'Nouveau', prenom: 'Etudiant', email: `nouveau.${Date.now()}@test.com`, role: 'ETUDIANT' }
-        };
+    this.svc.create(payload as Etudiant).subscribe({
+      next: (newEtudiant) => {
         this.all.update(list => [newEtudiant, ...list]);
         this.addLoading.set(false);
         this.closeAddModal();
-    }, 500);
+      },
+      error: (err) => {
+        this.addLoading.set(false);
+        this.addError.set(err.error?.message ?? err.message ?? "Erreur lors de la création de l'étudiant");
+      }
+    });
   }
 
   filtered = computed(() => {

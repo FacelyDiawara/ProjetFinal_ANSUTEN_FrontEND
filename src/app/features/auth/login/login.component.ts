@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { AuthService } from '../../../services/auth.service';
 
 @Component({
@@ -335,21 +336,23 @@ export class LoginComponent {
 
   get f() { return this.form.controls; }
 
+  private sanitizer = inject(DomSanitizer);
+
   features = [
     {
       title: "Offres de stage",
       desc: "Accédez à des centaines d'offres de stage",
-      icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-8 0h-4V4h4v2z"/></svg>`
+      icon: this.sanitizer.bypassSecurityTrustHtml(`<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-8 0h-4V4h4v2z"/></svg>`)
     },
     {
       title: "Candidature simple",
       desc: "Postulez en quelques clics depuis votre espace",
-      icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>`
+      icon: this.sanitizer.bypassSecurityTrustHtml(`<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>`)
     },
     {
       title: "Suivi en temps réel",
       desc: "Suivez l'état de vos candidatures en direct",
-      icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>`
+      icon: this.sanitizer.bypassSecurityTrustHtml(`<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>`)
     }
   ];
 
@@ -374,11 +377,20 @@ export class LoginComponent {
       },
       error: err => {
         this.loading.set(false);
-        this.errorMsg.set(
-          err.status === 401
-            ? 'E-mail ou mot de passe incorrect.'
-            : 'Erreur de connexion. Veuillez réessayer.'
-        );
+
+        if (err.status === 0) {
+          this.errorMsg.set('Impossible de contacter le serveur. Vérifiez que le backend est démarré sur localhost:8080.');
+        } else if (err.status === 401) {
+          this.errorMsg.set('E-mail ou mot de passe incorrect.');
+        } else if (err.status === 403) {
+          this.errorMsg.set(
+            'Accès refusé (403). Vérifiez la configuration CORS et CSRF de votre backend Spring Boot.'
+          );
+        } else {
+          this.errorMsg.set(
+            err.error?.message ?? `Erreur de connexion (${err.status}). Veuillez réessayer.`
+          );
+        }
       }
     });
   }

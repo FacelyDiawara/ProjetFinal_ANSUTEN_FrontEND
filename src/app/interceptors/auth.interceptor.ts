@@ -8,13 +8,21 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const router      = inject(Router);
 
+  // Don't attach token on auth endpoints (login/register)
+  const isAuthEndpoint = req.url.includes('/auth/login') || req.url.includes('/auth/register');
+
   const token = authService.token();
-  const authReq = token
+  const authReq = (token && !isAuthEndpoint)
     ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
     : req;
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
+      // Never redirect auth endpoints — let the login/register component handle the error
+      if (isAuthEndpoint) {
+        return throwError(() => error);
+      }
+
       switch (error.status) {
         case 401:
           authService.logout();

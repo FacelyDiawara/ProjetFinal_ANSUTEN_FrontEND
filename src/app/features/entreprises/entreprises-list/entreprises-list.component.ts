@@ -253,22 +253,21 @@ export class EntreprisesListComponent implements OnInit {
     this.addLoading.set(true);
     this.addError.set(null);
     const payload = this.addForm.value;
-    
-    setTimeout(() => {
-        const newEntreprise: Entreprise = {
-            id: Date.now(),
-            raisonSociale: payload.raisonSociale,
-            secteurActivite: payload.secteurActivite,
-            adresse: payload.adresse,
-            siteWeb: payload.siteWeb,
-            statut: payload.statut,
-            email: `contact@${payload.raisonSociale.toLowerCase().replace(/\\s/g,'')}.com`,
-            telephone: '—'
-        };
+    // Ajout de champs factices pour le test si non fournis, le backend peut s'attendre à certaines valeurs
+    if (!payload.email) payload.email = `contact@${payload.raisonSociale.toLowerCase().replace(/\\s/g,'')}.com`;
+    if (!payload.telephone) payload.telephone = '—';
+
+    this.svc.create(payload as Entreprise).subscribe({
+      next: (newEntreprise) => {
         this.all.update(list => [newEntreprise, ...list]);
         this.addLoading.set(false);
         this.closeAddModal();
-    }, 500);
+      },
+      error: (err) => {
+        this.addLoading.set(false);
+        this.addError.set(err.error?.message ?? err.message ?? "Erreur lors de la création de l'entreprise");
+      }
+    });
   }
 
   filtered = computed(() => {

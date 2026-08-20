@@ -3,6 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { OffreStageService } from '../../../services/offre-stage.service';
 import { AuthService } from '../../../services/auth.service';
+import { EntrepriseService } from '../../../services/entreprise.service';
 
 @Component({
   selector: 'app-offre-form',
@@ -50,6 +51,21 @@ import { AuthService } from '../../../services/auth.service';
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 1. Informations Générales
               </div>
+
+              @if (auth.isAdmin()) {
+                <div class="form-group" style="margin-bottom: 1.25rem;">
+                  <label class="form-label" for="entrepriseId">Entreprise partenaire *</label>
+                  <select id="entrepriseId" class="form-select" formControlName="entrepriseId">
+                    <option value="">-- Sélectionner une entreprise --</option>
+                    @for (e of entreprises(); track e.id) {
+                      <option [value]="e.id">{{ e.raisonSociale }}</option>
+                    }
+                  </select>
+                  @if (f['entrepriseId'].invalid && f['entrepriseId'].touched) {
+                    <span class="form-error">L'entreprise est requise</span>
+                  }
+                </div>
+              }
 
               <div class="form-row" style="margin-bottom: 1.25rem;">
                 <div class="form-group">
@@ -139,6 +155,7 @@ import { AuthService } from '../../../services/auth.service';
 export class OffreFormComponent implements OnInit {
   private fb      = inject(FormBuilder);
   private svc     = inject(OffreStageService);
+  private entrepriseSvc = inject(EntrepriseService);
   private router  = inject(Router);
   private route   = inject(ActivatedRoute);
   protected auth  = inject(AuthService);
@@ -146,8 +163,12 @@ export class OffreFormComponent implements OnInit {
   isEdit   = signal(false);
   loading  = signal(false);
   errorMsg = signal<string | null>(null);
+  
+  entreprises = signal<any[]>([]);
+  currentEntrepriseId = signal<number | null>(null);
 
   form = this.fb.group({
+    entrepriseId:        [''],
     titre:               ['', Validators.required],
     lieu:                ['', Validators.required],
     description:         ['', Validators.required],
@@ -160,6 +181,18 @@ export class OffreFormComponent implements OnInit {
   get f() { return this.form.controls; }
 
   ngOnInit() {
+    if (this.auth.isAdmin()) {
+      this.form.controls['entrepriseId'].setValidators([Validators.required]);
+      this.entrepriseSvc.getAll().subscribe(res => this.entreprises.set(res));
+    } else if (this.auth.isEntreprise()) {
+      const user = this.auth.currentUser();
+      if (user?.id) {
+        this.entrepriseSvc.getByUtilisateur(user.id).subscribe(ent => {
+          this.currentEntrepriseId.set(ent.id!);
+        });
+      }
+    }
+
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEdit.set(true);
@@ -175,10 +208,13 @@ export class OffreFormComponent implements OnInit {
     const id  = this.route.snapshot.paramMap.get('id');
     const rawValue = this.form.getRawValue() as Record<string, unknown>;
 
-    // Inject entrepriseId from the logged-in user (required by the backend)
-    const user = this.auth.currentUser();
-    if (!this.isEdit() && user?.id) {
-      rawValue['entrepriseId'] = user.id;
+    // Inject entrepriseId correctly
+    if (!this.isEdit()) {
+      if (this.auth.isAdmin()) {
+        rawValue['entrepriseId'] = +(rawValue['entrepriseId'] as string);
+      } else if (this.currentEntrepriseId()) {
+        rawValue['entrepriseId'] = this.currentEntrepriseId();
+      }
     }
 
     const req = this.isEdit()

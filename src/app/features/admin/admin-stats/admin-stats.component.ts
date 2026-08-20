@@ -12,134 +12,198 @@ import { EntrepriseService } from '../../../services/entreprise.service';
   template: `
     <div class="page-header">
       <div>
-        <h1 class="page-title">Statistiques</h1>
-        <p class="page-subtitle">Analyse globale de la plateforme UniStage</p>
+        <h1 class="page-title">Analytics & Rapports</h1>
+        <p class="page-subtitle">Vue détaillée et performances de la plateforme UniStage</p>
       </div>
     </div>
 
-    <div class="kpi-grid">
-      <div class="kpi-card" style="background:linear-gradient(135deg,#4f46e5,#7c3aed)">
-        <div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg></div>
-        <div class="kpi-value">{{ etudiants().length }}</div>
-        <div class="kpi-label">Étudiants</div>
-        <div class="kpi-decor"></div>
+    <!-- Top KPI Row -->
+    <div class="stat-kpi-grid">
+      <div class="stat-kpi-card">
+        <div class="kpi-icon-bx" style="color:#6366f1; background:#eef2ff; border-color:#e0e7ff;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+        </div>
+        <div class="kpi-data">
+          <div class="kpi-val">{{ etudiants().length }}</div>
+          <div class="kpi-lbl">Total Étudiants</div>
+        </div>
       </div>
-      <div class="kpi-card" style="background:linear-gradient(135deg,#06b6d4,#0891b2)">
-        <div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 7V3H2v18h20V7H12z"/></svg></div>
-        <div class="kpi-value">{{ entreprises().length }}</div>
-        <div class="kpi-label">Entreprises</div>
-        <div class="kpi-decor"></div>
+      
+      <div class="stat-kpi-card">
+        <div class="kpi-icon-bx" style="color:#0ea5e9; background:#f0f9ff; border-color:#e0f2fe;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 7V3H2v18h20V7H12z"/></svg>
+        </div>
+        <div class="kpi-data">
+          <div class="kpi-val">{{ entreprises().length }}</div>
+          <div class="kpi-lbl">Total Entreprises</div>
+        </div>
       </div>
-      <div class="kpi-card" style="background:linear-gradient(135deg,#10b981,#059669)">
-        <div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M20 6h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/></svg></div>
-        <div class="kpi-value">{{ offres().length }}</div>
-        <div class="kpi-label">Offres totales</div>
-        <div class="kpi-decor"></div>
+      
+      <div class="stat-kpi-card">
+        <div class="kpi-icon-bx" style="color:#10b981; background:#ecfdf5; border-color:#d1fae5;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/></svg>
+        </div>
+        <div class="kpi-data">
+          <div class="kpi-val">{{ offres().length }}</div>
+          <div class="kpi-lbl">Offres Publiées</div>
+        </div>
       </div>
-      <div class="kpi-card" style="background:linear-gradient(135deg,#f59e0b,#d97706)">
-        <div class="kpi-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/></svg></div>
-        <div class="kpi-value">{{ candidatures().length }}</div>
-        <div class="kpi-label">Candidatures totales</div>
-        <div class="kpi-decor"></div>
+      
+      <div class="stat-kpi-card">
+        <div class="kpi-icon-bx" style="color:#f59e0b; background:#fffbeb; border-color:#fef3c7;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/></svg>
+        </div>
+        <div class="kpi-data">
+          <div class="kpi-val">{{ candidatures().length }}</div>
+          <div class="kpi-lbl">Total Candidatures</div>
+        </div>
       </div>
     </div>
 
-    <div class="stats-grid">
-      <!-- Offres -->
-      <div class="card">
-        <div class="card-header"><h3>Offres de stage</h3></div>
-        <div class="card-body">
-          <div class="stat-row">
-            <div class="stat-item">
-              <div class="stat-circle" style="--c:#10b981">{{ offresOuvertes() }}</div>
-              <span>Ouvertes</span>
+    <!-- Detailed Stats Row -->
+    <div class="stat-panels">
+      
+      <!-- Offres Panel -->
+      <div class="stat-panel">
+        <div class="panel-head">
+          <h4>Performance des Offres</h4>
+        </div>
+        <div class="panel-body">
+          <div class="dual-metric">
+            <div class="metric">
+              <span class="m-val success">{{ offresOuvertes() }}</span>
+              <span class="m-lbl">Actives</span>
             </div>
-            <div class="stat-item">
-              <div class="stat-circle" style="--c:#6b7280">{{ offresFermees() }}</div>
-              <span>Fermées</span>
+            <div class="metric">
+              <span class="m-val gray">{{ offresFermees() }}</span>
+              <span class="m-lbl">Clôturées</span>
             </div>
           </div>
-          <div class="progress-bar-wrap">
-            <div class="progress-bar">
-              <div class="progress-fill success" [style.width.%]="offresOuvertesPct()"></div>
-            </div>
-            <span class="progress-label">{{ offresOuvertesPct() | number:'1.0-0' }}% ouvertes</span>
+          <div class="prog-container">
+            <div class="prog-bar"><div class="prog-fill" [style.width.%]="offresOuvertesPct()"></div></div>
+            <div class="prog-txt">Taux d'ouverture : {{ offresOuvertesPct() | number:'1.0-0' }}%</div>
           </div>
         </div>
       </div>
 
-      <!-- Candidatures -->
-      <div class="card">
-        <div class="card-header"><h3>Candidatures</h3></div>
-        <div class="card-body">
-          <div class="cand-bars">
-            <div class="bar-item">
-              <span class="bar-lbl"><span class="dot" style="background:#f59e0b"></span>En attente</span>
-              <div class="bar-track"><div class="bar-fill" style="background:#f59e0b" [style.width.%]="candPct('EN_ATTENTE')"></div></div>
-              <span class="bar-num">{{ candCount('EN_ATTENTE') }}</span>
+      <!-- Candidatures Panel -->
+      <div class="stat-panel">
+        <div class="panel-head">
+          <h4>Répartition des Candidatures</h4>
+        </div>
+        <div class="panel-body">
+          <div class="c-bar-list">
+            <div class="c-bar-row">
+              <div class="c-bar-name"><span class="c-dot" style="background:#f59e0b"></span> En attente</div>
+              <div class="c-bar-track"><div class="c-bar-fill" style="background:#f59e0b" [style.width.%]="candPct('EN_ATTENTE')"></div></div>
+              <div class="c-bar-num">{{ candCount('EN_ATTENTE') }}</div>
             </div>
-            <div class="bar-item">
-              <span class="bar-lbl"><span class="dot" style="background:#10b981"></span>Acceptées</span>
-              <div class="bar-track"><div class="bar-fill" style="background:#10b981" [style.width.%]="candPct('ACCEPTEE')"></div></div>
-              <span class="bar-num">{{ candCount('ACCEPTEE') }}</span>
+            <div class="c-bar-row">
+              <div class="c-bar-name"><span class="c-dot" style="background:#10b981"></span> Acceptées</div>
+              <div class="c-bar-track"><div class="c-bar-fill" style="background:#10b981" [style.width.%]="candPct('ACCEPTEE')"></div></div>
+              <div class="c-bar-num">{{ candCount('ACCEPTEE') }}</div>
             </div>
-            <div class="bar-item">
-              <span class="bar-lbl"><span class="dot" style="background:#ef4444"></span>Rejetées</span>
-              <div class="bar-track"><div class="bar-fill" style="background:#ef4444" [style.width.%]="candPct('REJETEE')"></div></div>
-              <span class="bar-num">{{ candCount('REJETEE') }}</span>
+            <div class="c-bar-row">
+              <div class="c-bar-name"><span class="c-dot" style="background:#ef4444"></span> Rejetées</div>
+              <div class="c-bar-track"><div class="c-bar-fill" style="background:#ef4444" [style.width.%]="candPct('REJETEE')"></div></div>
+              <div class="c-bar-num">{{ candCount('REJETEE') }}</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Taux de succès -->
-      <div class="card">
-        <div class="card-header"><h3>Taux de succès</h3></div>
-        <div class="card-body">
-          <div class="rate-display">
-            <div class="rate-circle">
-              <svg viewBox="0 0 36 36" class="rate-svg">
-                <path class="rate-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
-                <path class="rate-fg" [style.strokeDasharray]="successRate() + ', 100'" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+      <!-- Taux de succès Panel -->
+      <div class="stat-panel">
+        <div class="panel-head">
+          <h4>Taux d'Acceptation Global</h4>
+        </div>
+        <div class="panel-body">
+          <div class="success-rate-wrap">
+            <div class="sr-circle">
+              <svg viewBox="0 0 36 36" class="sr-svg">
+                <defs>
+                  <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#10b981" />
+                    <stop offset="100%" stop-color="#34d399" />
+                  </linearGradient>
+                </defs>
+                <path class="sr-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                <path class="sr-fg" [style.strokeDasharray]="successRate() + ', 100'" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
               </svg>
-              <div class="rate-text">{{ successRate() | number:'1.0-0' }}%</div>
+              <div class="sr-text">
+                <span class="sr-val">{{ successRate() | number:'1.0-0' }}%</span>
+                <span class="sr-lbl">Validées</span>
+              </div>
             </div>
-            <p class="rate-desc">des candidatures ont été acceptées</p>
           </div>
         </div>
       </div>
+
     </div>
   `,
   styles: [`
     :host { display:block; }
-    .kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:1rem; margin-bottom:1.5rem; }
-    .kpi-card { display:flex; flex-direction:column; padding:1.25rem; border-radius:16px; color:white; position:relative; overflow:hidden; }
-    .kpi-icon { width:40px; height:40px; border-radius:10px; background:rgba(255,255,255,0.18); display:flex; align-items:center; justify-content:center; margin-bottom:0.75rem; }
-    .kpi-value { font-size:2rem; font-weight:800; line-height:1; margin-bottom:0.2rem; }
-    .kpi-label { font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; opacity:0.8; }
-    .kpi-decor { position:absolute; width:70px; height:70px; border-radius:50%; background:rgba(255,255,255,0.08); bottom:-15px; right:-15px; }
-    .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1rem; }
-    .stat-row { display:flex; justify-content:center; gap:2rem; margin-bottom:1rem; }
-    .stat-item { display:flex; flex-direction:column; align-items:center; gap:0.5rem; font-size:0.8rem; color:#6b7280; font-weight:500; }
-    .stat-circle { width:64px; height:64px; border-radius:50%; background:color-mix(in srgb, var(--c) 12%, transparent); border:3px solid var(--c); display:flex; align-items:center; justify-content:center; font-size:1.4rem; font-weight:800; color:var(--c); }
-    .progress-bar-wrap { display:flex; flex-direction:column; gap:0.375rem; }
-    .progress-bar { height:8px; background:#f3f4f6; border-radius:9999px; overflow:hidden; }
-    .progress-fill { height:100%; border-radius:9999px; transition:width 1s ease; &.success { background:#10b981; } }
-    .progress-label { font-size:0.75rem; color:#6b7280; text-align:right; }
-    .cand-bars { display:flex; flex-direction:column; gap:1rem; }
-    .bar-item { display:flex; align-items:center; gap:0.75rem; }
-    .bar-lbl { display:flex; align-items:center; gap:0.375rem; font-size:0.8rem; color:#4b5563; font-weight:500; min-width:90px; }
-    .dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
-    .bar-track { flex:1; height:8px; background:#f3f4f6; border-radius:9999px; overflow:hidden; }
-    .bar-fill { height:100%; border-radius:9999px; transition:width 0.8s ease; }
-    .bar-num { font-size:0.8rem; font-weight:700; color:#374151; min-width:22px; text-align:right; }
-    .rate-display { display:flex; flex-direction:column; align-items:center; gap:1rem; padding:1rem 0; }
-    .rate-circle { position:relative; width:100px; height:100px; }
-    .rate-svg { transform:rotate(-90deg); width:100%; height:100%; }
-    .rate-bg { fill:none; stroke:#f3f4f6; stroke-width:3.8; }
-    .rate-fg { fill:none; stroke:#10b981; stroke-width:3.8; stroke-linecap:round; transition:stroke-dasharray 1s ease; }
-    .rate-text { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:1.25rem; font-weight:800; color:#111827; }
-    .rate-desc { font-size:0.8rem; color:#6b7280; text-align:center; }
+    
+    /* Top KPI Row */
+    .stat-kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1.25rem; margin-bottom:2rem; }
+    .stat-kpi-card { 
+      background: white; border: 1px solid #e2e8f0; border-radius: 12px;
+      padding: 1.5rem; display:flex; align-items:center; gap:1.25rem;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+      transition: all 0.2s;
+    }
+    .stat-kpi-card:hover { border-color: #cbd5e1; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); transform:translateY(-2px); }
+    .kpi-icon-bx { 
+      width: 52px; height: 52px; border-radius: 14px;
+      display:flex; align-items:center; justify-content:center;
+      border: 1px solid transparent;
+    }
+    .kpi-data { flex:1; }
+    .kpi-val { font-size: 1.85rem; font-weight: 800; color: #0f172a; line-height: 1; font-family:'Plus Jakarta Sans', sans-serif; letter-spacing:-0.03em; }
+    .kpi-lbl { font-size: 0.8rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.35rem; }
+
+    /* Detailed Stats Row */
+    .stat-panels { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:1.5rem; }
+    .stat-panel { 
+      background: white; border: 1px solid #e2e8f0; border-radius: 16px; 
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+      display:flex; flex-direction:column;
+    }
+    .panel-head { padding: 1.25rem 1.5rem; border-bottom: 1px solid #f1f5f9; }
+    .panel-head h4 { font-size: 1.05rem; font-weight: 800; color: #1e293b; margin:0; }
+    .panel-body { padding: 1.75rem 1.5rem; flex:1; display:flex; flex-direction:column; }
+    
+    /* Performance Offres */
+    .dual-metric { display:flex; gap:3rem; justify-content:center; margin-bottom:2rem; flex:1; align-items:center; }
+    .metric { text-align:center; }
+    .m-val { font-size: 2.75rem; font-weight: 800; line-height:1; display:block; font-family:'Plus Jakarta Sans', sans-serif; letter-spacing:-0.03em; }
+    .m-val.success { color: #10b981; }
+    .m-val.gray { color: #94a3b8; }
+    .m-lbl { font-size: 0.85rem; font-weight: 600; color: #64748b; margin-top:0.6rem; display:block; text-transform:uppercase; letter-spacing:0.04em; }
+    
+    .prog-container { margin-top: auto; }
+    .prog-bar { height: 10px; background: #f1f5f9; border-radius: 99px; overflow:hidden; margin-bottom: 0.6rem; }
+    .prog-fill { height: 100%; background: linear-gradient(90deg, #10b981, #34d399); border-radius: 99px; transition: width 1s ease-out; }
+    .prog-txt { font-size: 0.8rem; color: #64748b; text-align: right; font-weight: 600; }
+    
+    /* Candidate Bars */
+    .c-bar-list { display:flex; flex-direction:column; gap: 1.5rem; flex:1; justify-content:center; }
+    .c-bar-row { display:flex; align-items:center; gap: 1rem; }
+    .c-bar-name { width: 95px; font-size: 0.85rem; font-weight: 600; color: #475569; display:flex; align-items:center; gap:0.6rem; }
+    .c-bar-track { flex:1; height: 12px; background: #f1f5f9; border-radius: 99px; overflow:hidden; }
+    .c-bar-fill { height: 100%; border-radius: 99px; transition: width 1s ease-out; }
+    .c-bar-num { width: 35px; text-align:right; font-size: 1.05rem; font-weight: 700; color: #0f172a; }
+    .c-dot { width:10px; height:10px; border-radius:50%; }
+
+    /* Success Rate */
+    .success-rate-wrap { display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1; }
+    .sr-circle { position:relative; width:160px; height:160px; }
+    .sr-svg { transform:rotate(-90deg); width:100%; height:100%; }
+    .sr-bg { fill:none; stroke:#f1f5f9; stroke-width:3.5; }
+    .sr-fg { fill:none; stroke:url(#grad); stroke-width:3.5; stroke-linecap:round; transition:stroke-dasharray 1.2s ease-out; }
+    .sr-text { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    .sr-val { font-size: 2.5rem; font-weight: 800; color: #0f172a; font-family:'Plus Jakarta Sans',sans-serif; line-height:1; letter-spacing:-0.03em; }
+    .sr-lbl { font-size: 0.8rem; color: #64748b; font-weight:700; margin-top:0.4rem; text-transform:uppercase; letter-spacing:0.04em; }
   `]
 })
 export class AdminStatsComponent implements OnInit {

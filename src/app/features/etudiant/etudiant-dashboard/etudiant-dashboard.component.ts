@@ -9,13 +9,13 @@ import { Candidature } from '../../../models/candidature';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink],
   template: `
-    <div class="welcome-banner">
-      <div class="welcome-content">
+    <div class="student-banner">
+      <div class="student-content">
         <h1>Bienvenue, {{ userName() }} 👋</h1>
-        <p>Retrouvez toutes les offres de stage disponibles à l'Université de Labé et suivez l'avancement de vos candidatures.</p>
+        <p>Retrouvez toutes les offres de stage disponibles et suivez l'avancement de vos candidatures en temps réel.</p>
       </div>
-      <div class="welcome-actions">
-        <a routerLink="/etudiant/offres" class="btn btn-primary btn-lg" style="box-shadow:0 10px 25px rgba(0,0,0,0.3)">
+      <div class="student-actions">
+        <a routerLink="/etudiant/offres" class="btn btn-primary btn-lg" style="box-shadow:0 10px 25px rgba(0,0,0,0.3); background: white; color: #3b82f6;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
           Rechercher un stage
         </a>
@@ -23,57 +23,61 @@ import { Candidature } from '../../../models/candidature';
     </div>
 
     <!-- KPI Grid -->
-    <div class="kpi-grid">
+    <div class="student-kpi-grid">
       <!-- Total -->
-      <div class="kpi-card">
-        <div class="kpi-accent" style="background:linear-gradient(180deg,#6366f1,#818cf8)"></div>
-        <div class="kpi-icon-wrap" style="background:#eef2ff;color:#6366f1">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM8 17h8v1H8v-1zm0-3h8v1H8v-1zm0-3h5v1H8v-1z"/></svg>
+      <div class="student-kpi-card">
+        <div class="skpi-header">
+          <div class="skpi-icon" style="background:linear-gradient(135deg, #eef2ff, #e0e7ff); color:#4f46e5;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM8 17h8v1H8v-1zm0-3h8v1H8v-1zm0-3h5v1H8v-1z"/></svg>
+          </div>
         </div>
-        <div class="kpi-body">
-          <div class="kpi-num">{{ candidatures().length }}</div>
-          <div class="kpi-title">Mes Candidatures</div>
-          <div class="kpi-sub">Total soumises</div>
+        <div>
+          <div class="skpi-val">{{ candidatures().length }}</div>
+          <div class="skpi-title">Mes Candidatures</div>
         </div>
+        <div class="skpi-decor" style="background:#4f46e5;"></div>
       </div>
 
       <!-- En attente -->
-      <div class="kpi-card">
-        <div class="kpi-accent" style="background:linear-gradient(180deg,#f59e0b,#fbbf24)"></div>
-        <div class="kpi-icon-wrap" style="background:#fffbeb;color:#f59e0b">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+      <div class="student-kpi-card">
+        <div class="skpi-header">
+          <div class="skpi-icon" style="background:linear-gradient(135deg, #fffbeb, #fef3c7); color:#f59e0b;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+          </div>
         </div>
-        <div class="kpi-body">
-          <div class="kpi-num">{{ enAttente() }}</div>
-          <div class="kpi-title">En attente</div>
-          <div class="kpi-sub">En cours de traitement</div>
+        <div>
+          <div class="skpi-val">{{ enAttente() }}</div>
+          <div class="skpi-title">En attente</div>
         </div>
+        <div class="skpi-decor" style="background:#f59e0b;"></div>
       </div>
 
       <!-- Acceptées -->
-      <div class="kpi-card">
-        <div class="kpi-accent" style="background:linear-gradient(180deg,#10b981,#34d399)"></div>
-        <div class="kpi-icon-wrap" style="background:#ecfdf5;color:#10b981">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+      <div class="student-kpi-card">
+        <div class="skpi-header">
+          <div class="skpi-icon" style="background:linear-gradient(135deg, #ecfdf5, #d1fae5); color:#10b981;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          </div>
         </div>
-        <div class="kpi-body">
-          <div class="kpi-num">{{ acceptees() }}</div>
-          <div class="kpi-title">Acceptées</div>
-          <div class="kpi-sub">Candidatures retenues</div>
+        <div>
+          <div class="skpi-val">{{ acceptees() }}</div>
+          <div class="skpi-title">Acceptées</div>
         </div>
+        <div class="skpi-decor" style="background:#10b981;"></div>
       </div>
 
       <!-- Rejetées -->
-      <div class="kpi-card">
-        <div class="kpi-accent" style="background:linear-gradient(180deg,#ef4444,#f87171)"></div>
-        <div class="kpi-icon-wrap" style="background:#fef2f2;color:#ef4444">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/></svg>
+      <div class="student-kpi-card">
+        <div class="skpi-header">
+          <div class="skpi-icon" style="background:linear-gradient(135deg, #fef2f2, #fee2e2); color:#ef4444;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/></svg>
+          </div>
         </div>
-        <div class="kpi-body">
-          <div class="kpi-num">{{ rejetees() }}</div>
-          <div class="kpi-title">Non retenues</div>
-          <div class="kpi-sub">Candidatures refusées</div>
+        <div>
+          <div class="skpi-val">{{ rejetees() }}</div>
+          <div class="skpi-title">Non retenues</div>
         </div>
+        <div class="skpi-decor" style="background:#ef4444;"></div>
       </div>
     </div>
 
@@ -221,25 +225,54 @@ import { Candidature } from '../../../models/candidature';
     </div>
   `,
   styles: [`
+    /* ── Student Dashboard Specific Styles ── */
+    .student-banner {
+      background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 50%, #4f46e5 100%);
+      border-radius: 20px;
+      padding: 2.5rem 3rem;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 2.25rem;
+      box-shadow: 0 15px 35px -5px rgba(59, 130, 246, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+    .student-banner::after {
+      content: ''; position: absolute; right: -50px; bottom: -80px; width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
+      border-radius: 50%; pointer-events: none;
+    }
+    .student-banner::before {
+      content: ''; position: absolute; left: 10%; top: -100px; width: 250px; height: 250px;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+      border-radius: 50%; pointer-events: none;
+    }
+    .student-content { position: relative; z-index: 1; }
+    .student-content h1 { font-size: 2.25rem; font-weight: 800; color: white; margin-bottom: 0.5rem; text-shadow: 0 2px 4px rgba(0,0,0,0.1); letter-spacing:-0.03em; }
+    .student-content p { font-size: 1.05rem; color: rgba(255,255,255,0.9); max-width: 540px; font-weight: 400; line-height:1.6; margin:0; }
+    .student-actions { position: relative; z-index: 1; }
+
     /* ── KPI Cards ── */
-    .kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:1rem; margin-bottom:1.5rem; }
-    .kpi-card {
-      background:#fff; border-radius:16px; border:1px solid #f1f5f9;
-      box-shadow:0 2px 12px rgba(0,0,0,0.06);
-      display:flex; align-items:center; gap:1rem; padding:1.25rem 1.25rem 1.25rem 0;
-      position:relative; overflow:hidden;
-      transition:transform 0.2s, box-shadow 0.2s;
-      &:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,0.1); }
+    .student-kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1.25rem; margin-bottom:2rem; }
+    .student-kpi-card {
+      background: #fff; border-radius: 18px; padding: 1.5rem;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.04);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      position: relative; overflow: hidden;
+      transition: all 0.3s ease;
+      display: flex; flex-direction: column; gap: 1rem;
     }
-    .kpi-accent { width:5px; align-self:stretch; border-radius:0 4px 4px 0; flex-shrink:0; }
-    .kpi-icon-wrap {
-      width:46px; height:46px; border-radius:14px; flex-shrink:0;
-      display:flex; align-items:center; justify-content:center;
-    }
-    .kpi-body { flex:1; }
-    .kpi-num { font-size:2rem; font-weight:800; color:#0f172a; line-height:1; font-family:'Inter',sans-serif; letter-spacing:-0.04em; }
-    .kpi-title { font-size:0.85rem; font-weight:600; color:#334155; margin-top:0.2rem; }
-    .kpi-sub { font-size:0.72rem; color:#94a3b8; margin-top:0.1rem; }
+    .student-kpi-card:hover { transform: translateY(-5px); box-shadow: 0 20px 35px -5px rgba(0,0,0,0.08); border-color: #cbd5e1; }
+    .skpi-header { display: flex; justify-content: space-between; align-items: flex-start; }
+    .skpi-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; }
+    .skpi-val { font-size: 2.4rem; font-weight: 800; color: #0f172a; line-height: 1; letter-spacing:-0.04em; font-family:'Plus Jakarta Sans',sans-serif; }
+    .skpi-title { font-size: 0.9rem; font-weight: 600; color: #64748b; margin-top: 0.4rem; text-transform:uppercase; letter-spacing:0.04em; }
+    .skpi-decor { position:absolute; bottom:0; left:0; right:0; height:4px; opacity:0; transition:opacity 0.3s ease; }
+    .student-kpi-card:hover .skpi-decor { opacity:1; }
 
     /* ── Analytics Row ── */
     .analytics-row { display:grid; grid-template-columns:1fr 1.6fr; gap:1rem; margin-bottom:1.5rem; }

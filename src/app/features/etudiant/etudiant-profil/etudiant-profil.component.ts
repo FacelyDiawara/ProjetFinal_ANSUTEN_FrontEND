@@ -169,7 +169,7 @@ import { EtudiantService } from '../../../services/etudiant.service';
             </div>
             <div class="form-card-footer">
               <button type="button" class="btn btn-outline" (click)="resetForm()">Annuler les modifications</button>
-              <button type="submit" class="btn btn-primary btn-lg" [disabled]="loading()">
+              <button type="submit" class="btn btn-primary" [disabled]="loading()">
                 @if (loading()) { <span class="spinner"></span> }
                 Sauvegarder mon profil
               </button>

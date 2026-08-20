@@ -84,21 +84,21 @@ import { RouterLink } from '@angular/router';
                 <td>{{ c.offreStage?.entreprise?.raisonSociale ?? '—' }}</td>
                 <td>{{ c.dateSoumission ? (c.dateSoumission | date:'dd/MM/yyyy') : '—' }}</td>
                 <td>
-                  @if (canManage()) {
-                    <select class="statut-select" [value]="c.statut" (change)="changerStatut(c, $any($event.target).value)" [attr.aria-label]="'Statut de ' + c.etudiant?.utilisateur?.nom">
-                      <option value="EN_ATTENTE">En attente</option>
-                      <option value="ACCEPTEE">Acceptée</option>
-                      <option value="REJETEE">Rejetée</option>
-                    </select>
-                  } @else {
-                    <span class="badge" [class]="badgeClass(c.statut)">{{ label(c.statut) }}</span>
-                  }
+                  <span class="badge" [class]="badgeClass(c.statut)">{{ label(c.statut) }}</span>
                 </td>
                 <td>
                   <div class="action-btns">
                     <button class="btn-action btn-action-info" (click)="viewLetter(c)" title="Voir la lettre de motivation" aria-label="Voir lettre">
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
                     </button>
+                    @if (canManage() && c.statut === 'EN_ATTENTE') {
+                      <button class="btn-action btn-action-success" (click)="changerStatut(c, 'ACCEPTEE')" title="Accepter">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                      </button>
+                      <button class="btn-action btn-action-warning" (click)="changerStatut(c, 'REJETEE')" title="Refuser">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                      </button>
+                    }
                     @if (auth.isAdmin()) {
                       <a [routerLink]="['/admin/candidatures', c.id, 'modifier']" class="btn-action btn-action-warning" title="Modifier">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>

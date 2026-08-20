@@ -95,17 +95,19 @@ import { RouterLink } from '@angular/router';
                   }
                 </td>
                 <td>
-                  <button class="btn btn-ghost btn-sm btn-icon" (click)="viewLetter(c)" title="Voir la lettre de motivation" aria-label="Voir lettre">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-                  </button>
-                  @if (auth.isAdmin()) {
-                    <a [routerLink]="['/admin/candidatures', c.id, 'modifier']" class="btn btn-ghost btn-sm btn-icon" title="Modifier">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-                    </a>
-                    <button class="btn btn-ghost btn-sm btn-icon" (click)="delete(c)" title="Supprimer">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color:#ef4444"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                  <div class="action-btns">
+                    <button class="btn-action btn-action-info" (click)="viewLetter(c)" title="Voir la lettre de motivation" aria-label="Voir lettre">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
                     </button>
-                  }
+                    @if (auth.isAdmin()) {
+                      <a [routerLink]="['/admin/candidatures', c.id, 'modifier']" class="btn-action btn-action-warning" title="Modifier">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                      </a>
+                      <button class="btn-action btn-action-danger" (click)="delete(c)" title="Supprimer">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                      </button>
+                    }
+                  </div>
                 </td>
               </tr>
             }
@@ -214,7 +216,7 @@ import { RouterLink } from '@angular/router';
     .form-ctrl { padding:0.5rem 0.875rem; border:1.5px solid #e5e7eb; border-radius:10px; font-size:0.875rem; outline:none; width:160px; &:focus { border-color:#818cf8; } }
     .cell-user { display:flex; align-items:center; gap:0.625rem; }
     .avatar-sm { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#4f46e5,#7c3aed); display:flex; align-items:center; justify-content:center; color:white; font-weight:700; font-size:0.72rem; flex-shrink:0; }
-    .action-btns { display:flex; gap:0.375rem; }
+    .action-btns { display:flex; gap:0.5rem; align-items:center; }
     .statut-select { appearance:none; background:transparent; border:1.5px solid #e5e7eb; border-radius:9999px; padding:0.2rem 1.5rem 0.2rem 0.625rem; font-size:0.75rem; font-weight:700; cursor:pointer; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 0.375rem center; background-size:0.875rem; text-transform:uppercase; letter-spacing:0.04em; }
 
     /* ── Add Candidature Modal ── */

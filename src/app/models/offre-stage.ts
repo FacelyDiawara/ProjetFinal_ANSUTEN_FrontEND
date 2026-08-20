@@ -6,15 +6,8 @@ export interface OffreStage {
   description: string;
   competencesRequises: string;
   dateDebut: string;
-  dateFin?: string;
-  duree?: number;
-  lieu?: string;
+  dateFin: string;
+  lieu: string;
   statut: StatutOffre;
-  entreprise?: {
-    id?: number;
-    raisonSociale: string;
-    secteurActivite: string;
-  };
   entrepriseId?: number;
-  nombreCandidatures?: number;
 }

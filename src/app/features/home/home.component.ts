@@ -5,6 +5,8 @@ import { DatePipe, SlicePipe } from '@angular/common';
 import { OffreStageService } from '../../services/offre-stage.service';
 import { OffreStage } from '../../models/offre-stage';
 import { AuthService } from '../../services/auth.service';
+import { EntrepriseService } from '../../services/entreprise.service';
+import { Entreprise } from '../../models/entreprise';
 
 @Component({
   selector: 'app-home',
@@ -101,7 +103,7 @@ import { AuthService } from '../../services/auth.service';
                 </div>
               </div>
               <h3 class="offer-title">{{ o.titre }}</h3>
-              <p class="offer-company">{{ o.entreprise?.raisonSociale ?? 'Entreprise partenaire' }}</p>
+              <p class="offer-company">{{ getEntrepriseName(o.entrepriseId) }}</p>
               <p class="offer-desc">{{ o.description | slice:0:120 }}{{ o.description.length > 120 ? '...' : '' }}</p>
               <div class="offer-skills">
                 @for (skill of skills(o); track skill) {
@@ -240,6 +242,8 @@ export class HomeComponent implements OnInit {
   private auth   = inject(AuthService);
   private router = inject(Router);
 
+  private entSvc = inject(EntrepriseService);
+
   isLoggedIn = this.auth.isLoggedIn;
 
   dashboardLink = computed(() => {
@@ -250,6 +254,7 @@ export class HomeComponent implements OnInit {
   });
 
   offres     = signal<OffreStage[]>([]);
+  entreprises = signal<Entreprise[]>([]);
   loading    = signal(true);
   searchTerm = '';
   filterLieu = '';
@@ -272,10 +277,21 @@ export class HomeComponent implements OnInit {
       next: d => { this.offres.set(d); this.loading.set(false); },
       error: () => this.loading.set(false)
     });
+    this.entSvc.getAll().subscribe({
+      next: d => this.entreprises.set(d)
+    });
+  }
+
+  getEntrepriseName(entrepriseId?: number): string {
+    if (!entrepriseId) {
+      return 'Entreprise partenaire';
+    }
+    const entreprise = this.entreprises().find(e => e.id === entrepriseId);
+    return entreprise?.raisonSociale || 'Entreprise partenaire';
   }
 
   companyInitial(o: OffreStage) {
-    return (o.entreprise?.raisonSociale ?? o.titre)[0].toUpperCase();
+    return (this.getEntrepriseName(o.entrepriseId) || o.titre)[0].toUpperCase();
   }
 
   skills(o: OffreStage) {

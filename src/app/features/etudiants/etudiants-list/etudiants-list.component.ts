@@ -86,12 +86,14 @@ import { Etudiant } from '../../../models/etudiant';
                 <td>{{ e.telephone ?? '—' }}</td>
                 @if (auth.isAdmin()) {
                   <td>
-                    <button class="btn btn-sm btn-danger" (click)="supprimer(e)"
-                            title="Supprimer cet étudiant" aria-label="Supprimer">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
-                      </svg>
-                    </button>
+                    <div class="action-btns">
+                      <button class="btn-action btn-action-danger" (click)="supprimer(e)"
+                              title="Supprimer cet étudiant" aria-label="Supprimer">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                        </svg>
+                      </button>
+                    </div>
                   </td>
                 }
               </tr>
@@ -184,6 +186,7 @@ import { Etudiant } from '../../../models/etudiant';
     .avatar-sm { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#4f46e5,#7c3aed); display:flex; align-items:center; justify-content:center; color:white; font-weight:700; font-size:0.72rem; flex-shrink:0; }
     .fw-semibold { font-weight:600; }
     .text-muted { color:#6b7280; }
+    .action-btns { display:flex; gap:0.5rem; align-items:center; }
 
     /* ── Modal Styles ── */
     .add-modal { max-width:520px; width:95%; }

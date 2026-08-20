@@ -83,22 +83,22 @@ import { Entreprise } from '../../../models/entreprise';
                   </div>
                 </td>
                 <td><span class="tag">{{ e.secteurActivite }}</span></td>
-                <td>{{ e.email }}</td>
-                <td>{{ e.telephone }}</td>
-                <td><span class="badge" [class]="badgeClass(e.statut)">{{ label(e.statut) }}</span></td>
+                <td>-</td>
+                <td>-</td>
+                <td><span class="badge" [class]="badgeClass(e.statutValidation)">{{ label(e.statutValidation) }}</span></td>
                 @if (auth.isAdmin()) {
                   <td>
                     <div class="action-btns">
-                      @if (e.statut === 'EN_ATTENTE') {
-                        <button class="btn btn-sm btn-success" (click)="valider(e)" title="Valider">
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                      @if (e.statutValidation === 'EN_ATTENTE') {
+                        <button class="btn-action btn-action-success" (click)="valider(e)" title="Valider">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                         </button>
-                        <button class="btn btn-sm btn-warning" (click)="rejeter(e)" title="Rejeter">
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                        <button class="btn-action btn-action-warning" (click)="rejeter(e)" title="Rejeter">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
                         </button>
                       }
-                      <button class="btn btn-sm btn-danger" (click)="supprimer(e)" title="Supprimer" [attr.aria-label]="'Supprimer ' + e.raisonSociale">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                      <button class="btn-action btn-action-danger" (click)="supprimer(e)" title="Supprimer" [attr.aria-label]="'Supprimer ' + e.raisonSociale">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                           <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
                         </svg>
                       </button>
@@ -149,9 +149,9 @@ import { Entreprise } from '../../../models/entreprise';
                 <input id="siteWeb" type="text" class="field-input" formControlName="siteWeb"/>
               </div>
               <div class="field-group centered-field">
-                <label class="field-label" for="statut">Statut (Validation)</label>
+                <label class="field-label" for="statutValidation">Statut (Validation)</label>
                 <div class="select-wrap">
-                  <select id="statut" class="field-input" formControlName="statut">
+                  <select id="statutValidation" class="field-input" formControlName="statutValidation">
                     <option value="EN_ATTENTE">En attente</option>
                     <option value="VALIDEE">Validée</option>
                     <option value="REJETEE">Rejetée</option>
@@ -193,9 +193,7 @@ import { Entreprise } from '../../../models/entreprise';
     .company-icon { width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg,#0ea5e9,#6366f1); display:flex; align-items:center; justify-content:center; color:white; flex-shrink:0; }
     .fw-semibold { font-weight:600; }
     .text-muted { color:#6b7280; }
-    .action-btns { display:flex; gap:0.375rem; align-items:center; }
-    .btn-success { background:#10b981; color:white; &:hover { background:#059669; } }
-    .btn-warning { background:#f59e0b; color:white; &:hover { background:#d97706; } }
+    .action-btns { display:flex; gap:0.5rem; align-items:center; }
 
     /* ── Modal Styles ── */
     .add-modal { max-width:520px; width:95%; }
@@ -232,11 +230,11 @@ export class EntreprisesListComponent implements OnInit {
     secteurActivite: ['', Validators.required],
     adresse:         ['', Validators.required],
     siteWeb:         [''],
-    statut:          ['EN_ATTENTE', Validators.required]
+    statutValidation:['EN_ATTENTE', Validators.required]
   });
 
   openAddModal() {
-    this.addForm.reset({ statut: 'EN_ATTENTE' });
+    this.addForm.reset({ statutValidation: 'EN_ATTENTE' });
     this.addError.set(null);
     this.showAddModal.set(true);
   }
@@ -253,9 +251,6 @@ export class EntreprisesListComponent implements OnInit {
     this.addLoading.set(true);
     this.addError.set(null);
     const payload = this.addForm.value;
-    // Ajout de champs factices pour le test si non fournis, le backend peut s'attendre à certaines valeurs
-    if (!payload.email) payload.email = `contact@${payload.raisonSociale.toLowerCase().replace(/\\s/g,'')}.com`;
-    if (!payload.telephone) payload.telephone = '—';
 
     this.svc.create(payload as Entreprise).subscribe({
       next: (newEntreprise) => {
@@ -276,9 +271,8 @@ export class EntreprisesListComponent implements OnInit {
     return this.all().filter(e => {
       const matchTerm = !term ||
         (e.raisonSociale ?? '').toLowerCase().includes(term) ||
-        (e.secteurActivite ?? '').toLowerCase().includes(term) ||
-        (e.email ?? '').toLowerCase().includes(term);
-      const matchStat = !stat || e.statut === stat;
+        (e.secteurActivite ?? '').toLowerCase().includes(term);
+      const matchStat = !stat || e.statutValidation === stat;
       return matchTerm && matchStat;
     });
   });

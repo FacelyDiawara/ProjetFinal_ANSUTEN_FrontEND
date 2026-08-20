@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
+import { EntrepriseService } from '../../../services/entreprise.service';
 
 @Component({
   selector: 'app-entreprise-profil',
@@ -184,10 +185,13 @@ import { AuthService } from '../../../services/auth.service';
 export class EntrepriseProfilComponent implements OnInit {
   private fb = inject(FormBuilder);
   protected auth = inject(AuthService);
+  private entrepriseSvc = inject(EntrepriseService);
 
   loading    = signal(false);
   successMsg = signal<string | null>(null);
   errorMsg   = signal<string | null>(null);
+  isEdit     = signal(false);
+  entrepriseId = signal<number | null>(null);
 
   readonly profileTips = [
     'Renseignez la raison sociale officielle',
@@ -214,7 +218,26 @@ export class EntrepriseProfilComponent implements OnInit {
 
   ngOnInit() {
     const u = this.auth.currentUser();
-    if (u) { this.form.patchValue({ nom: u.nom, prenom: u.prenom, email: u.email }); }
+    if (u) { 
+      this.form.patchValue({ nom: u.nom, prenom: u.prenom, email: u.email }); 
+      if (u.id) {
+        this.entrepriseSvc.getByUtilisateur(u.id).subscribe({
+          next: (ent) => {
+            this.isEdit.set(true);
+            this.entrepriseId.set(ent.id!);
+            this.form.patchValue({
+              raisonSociale: ent.raisonSociale,
+              secteurActivite: ent.secteurActivite,
+              adresse: ent.adresse,
+              siteWeb: ent.siteWeb
+            });
+          },
+          error: () => {
+            // Not found, will be created on submit
+          }
+        });
+      }
+    }
   }
 
   resetForm() {
@@ -227,10 +250,48 @@ export class EntrepriseProfilComponent implements OnInit {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     this.loading.set(true);
     this.errorMsg.set(null);
-    setTimeout(() => {
+    
+    const u = this.auth.currentUser();
+    if (!u || !u.id) {
       this.loading.set(false);
-      this.successMsg.set('✅ Profil entreprise mis à jour avec succès !');
-      setTimeout(() => this.successMsg.set(null), 4000);
-    }, 800);
+      this.errorMsg.set('Utilisateur non connecté ou ID manquant');
+      return;
+    }
+    
+    const val = this.form.getRawValue();
+    const payload = {
+      raisonSociale: val.raisonSociale,
+      secteurActivite: val.secteurActivite,
+      adresse: val.adresse,
+      siteWeb: val.siteWeb,
+      utilisateurId: Number(u.id)
+    };
+
+    console.log('Payload entreprise :', payload);
+
+    const req = this.isEdit() 
+      ? this.entrepriseSvc.update(this.entrepriseId()!, payload as any)
+      : this.entrepriseSvc.create(payload as any);
+      
+    req.subscribe({
+      next: (ent) => {
+        this.loading.set(false);
+        this.successMsg.set('✅ Profil mis à jour avec succès !');
+        this.isEdit.set(true);
+        if (ent && ent.id) this.entrepriseId.set(ent.id);
+        setTimeout(() => this.successMsg.set(null), 4000);
+      },
+      error: (error) => {
+        this.loading.set(false);
+        console.log('Erreur backend :', error);
+        if (error.status === 400 && error.error?.message) {
+          this.errorMsg.set(error.error.message);
+        } else if (error.error?.message) {
+          this.errorMsg.set(error.error.message);
+        } else {
+          this.errorMsg.set("Erreur lors de l'enregistrement.");
+        }
+      }
+    });
   }
 }

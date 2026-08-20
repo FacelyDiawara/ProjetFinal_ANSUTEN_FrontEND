@@ -208,27 +208,65 @@ export class OffreFormComponent implements OnInit {
     const id  = this.route.snapshot.paramMap.get('id');
     const rawValue = this.form.getRawValue() as Record<string, unknown>;
 
-    // Inject entrepriseId correctly
-    if (!this.isEdit()) {
-      if (this.auth.isAdmin()) {
-        rawValue['entrepriseId'] = +(rawValue['entrepriseId'] as string);
-      } else if (this.currentEntrepriseId()) {
-        rawValue['entrepriseId'] = this.currentEntrepriseId();
+    // Date validation
+    if (rawValue['dateDebut'] && rawValue['dateFin']) {
+      const d1 = new Date(rawValue['dateDebut'] as string);
+      const d2 = new Date(rawValue['dateFin'] as string);
+      if (d2 < d1) {
+        this.loading.set(false);
+        this.errorMsg.set('La date de fin doit être postérieure ou égale à la date de début');
+        return;
       }
     }
 
+    // Inject entrepriseId correctly
+    let entrepriseIdToSend = null;
+    if (this.auth.isAdmin()) {
+      entrepriseIdToSend = Number(rawValue['entrepriseId']);
+    } else if (this.currentEntrepriseId()) {
+      entrepriseIdToSend = Number(this.currentEntrepriseId());
+    }
+
+    console.log('Entreprise ID :', entrepriseIdToSend);
+    
+    if (!entrepriseIdToSend && !this.isEdit()) {
+       this.loading.set(false);
+       this.errorMsg.set('Erreur : ID Entreprise manquant.');
+       return;
+    }
+
+    const payload = {
+      titre: rawValue['titre'],
+      description: rawValue['description'],
+      competencesRequises: rawValue['competencesRequises'],
+      dateDebut: rawValue['dateDebut'],
+      dateFin: rawValue['dateFin'],
+      lieu: rawValue['lieu'],
+      statut: rawValue['statut'],
+      entrepriseId: entrepriseIdToSend
+    };
+
+    console.log('Payload offre envoyé :', payload);
+
     const req = this.isEdit()
-      ? this.svc.update(+id!, rawValue as never)
-      : this.svc.create(rawValue as never);
+      ? this.svc.update(+id!, payload as never)
+      : this.svc.create(payload as never);
 
     req.subscribe({
       next: () => {
         this.loading.set(false);
         this.router.navigate(['..'], { relativeTo: this.route });
       },
-      error: err => {
+      error: error => {
         this.loading.set(false);
-        this.errorMsg.set(err.error?.message ?? err.message ?? "Erreur lors de l'enregistrement. Vérifiez que le backend est démarré.");
+        console.log('Erreur backend :', error);
+        if (error.status === 400 && error.error?.message) {
+          this.errorMsg.set(error.error.message);
+        } else if (error.error?.message) {
+          this.errorMsg.set(error.error.message);
+        } else {
+          this.errorMsg.set("Erreur lors de l'enregistrement.");
+        }
       }
     });
   }

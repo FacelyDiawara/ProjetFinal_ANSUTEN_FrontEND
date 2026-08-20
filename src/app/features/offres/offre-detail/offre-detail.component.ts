@@ -5,7 +5,9 @@ import { FormsModule } from '@angular/forms';
 import { OffreStageService } from '../../../services/offre-stage.service';
 import { CandidatureService } from '../../../services/candidature.service';
 import { AuthService } from '../../../services/auth.service';
+import { EntrepriseService } from '../../../services/entreprise.service';
 import { OffreStage } from '../../../models/offre-stage';
+import { Entreprise } from '../../../models/entreprise';
 
 @Component({
   selector: 'app-offre-detail',
@@ -35,7 +37,7 @@ import { OffreStage } from '../../../models/offre-stage';
               <div class="company-logo">{{ companyInitial() }}</div>
               <div>
                 <h1>{{ offre()!.titre }}</h1>
-                <p class="company-name">{{ offre()!.entreprise?.raisonSociale ?? 'Entreprise partenaire' }}</p>
+                <p class="company-name">{{ getEntrepriseName() }}</p>
               </div>
               <span class="badge" [class]="offre()!.statut === 'OUVERTE' ? 'badge-success' : 'badge-gray'">
                 {{ offre()!.statut === 'OUVERTE' ? 'Ouverte' : 'Fermée' }}
@@ -46,7 +48,7 @@ import { OffreStage } from '../../../models/offre-stage';
               @if (offre()!.lieu) { <span class="info-chip">📍 {{ offre()!.lieu }}</span> }
               @if (offre()!.dateDebut) { <span class="info-chip">📅 Du {{ offre()!.dateDebut | date:'dd/MM/yyyy' }}</span> }
               @if (offre()!.dateFin) { <span class="info-chip">⏰ Au {{ offre()!.dateFin | date:'dd/MM/yyyy' }}</span> }
-              @if (offre()!.duree) { <span class="info-chip">⌛ {{ offre()!.duree }} mois</span> }
+              @if (getDuree() > 0) { <span class="info-chip">⌛ {{ getDuree() }} jours</span> }
             </div>
           </div>
 
@@ -108,9 +110,9 @@ import { OffreStage } from '../../../models/offre-stage';
             <div class="card-header"><h3>À propos</h3></div>
             <div class="card-body">
               <dl class="info-list">
-                <dt>Entreprise</dt><dd>{{ offre()!.entreprise?.raisonSociale ?? '—' }}</dd>
-                <dt>Secteur</dt><dd>{{ offre()!.entreprise?.secteurActivite ?? '—' }}</dd>
-                <dt>Lieu</dt><dd>{{ offre()!.lieu ?? '—' }}</dd>
+                <dt>Entreprise</dt><dd>{{ getEntrepriseName() }}</dd>
+                <dt>Secteur</dt><dd>{{ getEntrepriseSecteur() }}</dd>
+                <dt>Lieu</dt><dd>{{ offre()!.lieu || '—' }}</dd>
               </dl>
             </div>
           </div>
@@ -150,9 +152,11 @@ export class OffreDetailComponent implements OnInit {
   private route   = inject(ActivatedRoute);
   private svc     = inject(OffreStageService);
   private candSvc = inject(CandidatureService);
+  private entSvc  = inject(EntrepriseService);
   protected auth  = inject(AuthService);
 
   offre          = signal<OffreStage | null>(null);
+  entreprises    = signal<Entreprise[]>([]);
   loading        = signal(true);
   lettreMotivation = '';
   postuleLoading = signal(false);
@@ -160,7 +164,39 @@ export class OffreDetailComponent implements OnInit {
   postuleSuccess = signal<string | null>(null);
 
   skills() { return this.offre()?.competencesRequises.split(',').map(s => s.trim()) ?? []; }
-  companyInitial() { return (this.offre()?.entreprise?.raisonSociale ?? this.offre()?.titre ?? '?')[0].toUpperCase(); }
+
+  companyInitial() {
+    return (this.getEntrepriseName() || this.offre()?.titre || '?')[0].toUpperCase();
+  }
+
+  getEntrepriseName(): string {
+    const offre = this.offre();
+    if (!offre?.entrepriseId) {
+      return 'Entreprise';
+    }
+    const entreprise = this.entreprises().find(e => e.id === offre.entrepriseId);
+    return entreprise?.raisonSociale || 'Entreprise';
+  }
+
+  getEntrepriseSecteur(): string {
+    const offre = this.offre();
+    if (!offre?.entrepriseId) {
+      return '—';
+    }
+    const entreprise = this.entreprises().find(e => e.id === offre.entrepriseId);
+    return entreprise?.secteurActivite || '—';
+  }
+
+  getDuree(): number {
+    const offre = this.offre();
+    if (!offre?.dateDebut || !offre?.dateFin) {
+      return 0;
+    }
+    const debut = new Date(offre.dateDebut);
+    const fin = new Date(offre.dateFin);
+    const difference = fin.getTime() - debut.getTime();
+    return Math.ceil(difference / (1000 * 60 * 60 * 24));
+  }
 
   backRoute() {
     const role = this.auth.role();
@@ -171,6 +207,10 @@ export class OffreDetailComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.entSvc.getAll().subscribe({
+      next: d => this.entreprises.set(d)
+    });
+
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.svc.getById(+id).subscribe({

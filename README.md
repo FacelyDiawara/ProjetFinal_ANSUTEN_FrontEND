@@ -7,7 +7,7 @@ Ce projet a été généré avec [Angular CLI](https://github.com/angular/angula
 Pour démarrer un serveur de développement local, exécutez la commande suivante :
 
 ```bash
-ng serve
+ng serve ou tout simplement ng s
 ```
 
 Une fois le serveur lancé, ouvrez votre navigateur et accédez à `http://localhost:4200/`. L'application se rechargera automatiquement à chaque modification des fichiers source.

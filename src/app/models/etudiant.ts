@@ -12,4 +12,5 @@ export interface Etudiant {
     email: string;
     role: string;
   };
+  utilisateurId?: number;
 }

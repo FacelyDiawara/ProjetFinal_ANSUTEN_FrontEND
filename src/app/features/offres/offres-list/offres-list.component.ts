@@ -5,7 +5,9 @@ import { DatePipe } from '@angular/common';
 import { OffreStageService } from '../../../services/offre-stage.service';
 import { CandidatureService } from '../../../services/candidature.service';
 import { AuthService } from '../../../services/auth.service';
+import { EntrepriseService } from '../../../services/entreprise.service';
 import { OffreStage } from '../../../models/offre-stage';
+import { Entreprise } from '../../../models/entreprise';
 
 @Component({
   selector: 'app-offres-list',
@@ -74,7 +76,7 @@ import { OffreStage } from '../../../models/offre-stage';
             @for (offre of filtered(); track offre.id) {
               <tr>
                 <td><strong>{{ offre.titre }}</strong></td>
-                <td>{{ offre.entreprise?.raisonSociale ?? '—' }}</td>
+                <td>{{ getEntrepriseName(offre.entrepriseId) }}</td>
                 <td>{{ offre.lieu }}</td>
                 <td><span class="tag">{{ offre.competencesRequises ? offre.competencesRequises.split(',')[0] : '—' }}</span></td>
                 <td style="font-size:0.8rem">
@@ -91,8 +93,8 @@ import { OffreStage } from '../../../models/offre-stage';
                       </button>
                     }
                     @if (auth.isAdmin() || auth.isEntreprise()) {
-                      <a [routerLink]="editRoute(offre.id!)" class="btn btn-sm btn-outline" title="Modifier">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                      <a [routerLink]="editRoute(offre.id!)" class="btn-action btn-action-warning" title="Modifier">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
                       </a>
                     }
                     @if (auth.isAdmin()) {
@@ -101,8 +103,8 @@ import { OffreStage } from '../../../models/offre-stage';
                               (click)="toggleStatut(offre)">
                         {{ offre.statut === 'OUVERTE' ? 'Fermer' : 'Ouvrir' }}
                       </button>
-                      <button class="btn btn-sm btn-danger" (click)="supprimer(offre)">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                      <button class="btn-action btn-action-danger" (click)="supprimer(offre)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
                       </button>
                     }
                   </div>
@@ -126,7 +128,7 @@ import { OffreStage } from '../../../models/offre-stage';
           <div class="modal-body">
             <p style="color:#6b7280;font-size:0.875rem;margin-bottom:1rem">
               Rédigez votre lettre de motivation pour
-              <strong>{{ postuleOffre()!.entreprise?.raisonSociale }}</strong>.
+              <strong>{{ getEntrepriseName(postuleOffre()!.entrepriseId) }}</strong>.
             </p>
             <textarea class="form-control" rows="6" [(ngModel)]="lettreMotivation"
                       placeholder="Bonjour, je souhaite postuler à ce stage car..."
@@ -156,7 +158,7 @@ import { OffreStage } from '../../../models/offre-stage';
     }
     .search-input { padding-left:2.25rem; }
     .filter-select { width:160px; }
-    .action-btns { display:flex; gap:0.375rem; align-items:center; flex-wrap:wrap; }
+    .action-btns { display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap; }
     .loading-state { display:flex; flex-direction:column; align-items:center; gap:1rem; padding:4rem; color:#6b7280; }
     .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:1000; padding:1rem; }
     .modal-box { background:white; border-radius:16px; width:100%; max-width:520px; box-shadow:0 20px 60px rgba(0,0,0,0.2); }
@@ -172,9 +174,11 @@ import { OffreStage } from '../../../models/offre-stage';
 export class OffresListComponent implements OnInit {
   private svc          = inject(OffreStageService);
   private candSvc      = inject(CandidatureService);
+  private entSvc       = inject(EntrepriseService);
   protected auth       = inject(AuthService);
 
   offres     = signal<OffreStage[]>([]);
+  entreprises = signal<Entreprise[]>([]);
   loading    = signal(true);
   searchTerm    = '';
   statutFilter  = '';
@@ -203,6 +207,17 @@ export class OffresListComponent implements OnInit {
       next: d => { this.offres.set(d); this.loading.set(false); },
       error: () => this.loading.set(false)
     });
+    this.entSvc.getAll().subscribe({
+      next: d => this.entreprises.set(d)
+    });
+  }
+
+  getEntrepriseName(entrepriseId?: number): string {
+    if (!entrepriseId) {
+      return 'Entreprise';
+    }
+    const entreprise = this.entreprises().find(e => e.id === entrepriseId);
+    return entreprise?.raisonSociale || 'Entreprise';
   }
 
   newOffreRoute() {

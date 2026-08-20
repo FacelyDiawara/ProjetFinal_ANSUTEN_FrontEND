@@ -227,18 +227,26 @@ export class CandidatureFormComponent implements OnInit {
       });
     } else {
       // POST new candidature
-      this.svc.postuler({
-        offreStageId: +val.offreStageId!,
-        etudiantId: val.etudiantId ? +val.etudiantId : undefined,
+      const payload = {
         lettreMotivation: val.lettreMotivation!,
-        dateSoumission: val.dateSoumission!,
-        statut: (val.statut as any) || 'EN_ATTENTE',
-      }).subscribe({
+        etudiantId: val.etudiantId ? +val.etudiantId : undefined,
+        offreStageId: +val.offreStageId!
+      };
+
+      console.log('Payload candidature :', payload);
+
+      if (!payload.etudiantId || !payload.offreStageId) {
+         this.loading.set(false);
+         this.errorMsg.set('Erreur : ID Étudiant ou Offre manquant.');
+         return;
+      }
+
+      this.svc.postuler(payload as any).subscribe({
         next: () => this.router.navigate(['..'], { relativeTo: this.route }),
         error: err => {
           this.loading.set(false);
           this.errorMsg.set(
-            err.error?.message ?? err.message ?? "Erreur lors de l'enregistrement. Vérifiez que le backend est démarré."
+            err.error?.message ?? err.error ?? err.message ?? "Erreur lors de l'enregistrement. Vérifiez que le backend est démarré."
           );
         }
       });

@@ -202,6 +202,35 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: var(--radius-sm);
 }
 
+/* ─── Table Action Buttons ───────────────────────────────── */
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  color: white;
+  transition: all 0.2s ease;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+.btn-action:hover {
+  transform: translateY(-2px);
+}
+.btn-action-success { background: #10b981; box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2); }
+.btn-action-success:hover { background: #059669; box-shadow: 0 6px 8px -1px rgba(16, 185, 129, 0.3); }
+
+.btn-action-warning { background: #f59e0b; box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.2); }
+.btn-action-warning:hover { background: #d97706; box-shadow: 0 6px 8px -1px rgba(245, 158, 11, 0.3); }
+
+.btn-action-danger { background: #ef4444; box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.2); }
+.btn-action-danger:hover { background: #dc2626; box-shadow: 0 6px 8px -1px rgba(239, 68, 68, 0.3); }
+
+.btn-action-info { background: #3b82f6; box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2); }
+.btn-action-info:hover { background: #2563eb; box-shadow: 0 6px 8px -1px rgba(59, 130, 246, 0.3); }
+
 /* ─── Centered Form Container & Cards ────────────────────── */
 .form-container {
   max-width: 760px;

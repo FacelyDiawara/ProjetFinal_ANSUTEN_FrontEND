@@ -7,6 +7,7 @@ export interface Utilisateur {
   email: string;
   motDePasse?: string;
   role: Role;
+  actif?: boolean;
 }
 
 export interface AuthRequest {

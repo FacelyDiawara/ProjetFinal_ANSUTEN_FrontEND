@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
+import { EtudiantService } from '../../../services/etudiant.service';
 
 @Component({
   selector: 'app-etudiant-profil',
@@ -206,10 +207,13 @@ import { AuthService } from '../../../services/auth.service';
 export class EtudiantProfilComponent implements OnInit {
   private fb = inject(FormBuilder);
   protected auth = inject(AuthService);
+  private etudiantSvc = inject(EtudiantService);
 
   loading    = signal(false);
   successMsg = signal<string | null>(null);
   errorMsg   = signal<string | null>(null);
+  isEdit     = signal(false);
+  etudiantId = signal<number | null>(null);
 
   readonly profilTips = [
     'Complétez toutes les informations',
@@ -237,7 +241,27 @@ export class EtudiantProfilComponent implements OnInit {
 
   ngOnInit() {
     const u = this.auth.currentUser();
-    if (u) { this.form.patchValue({ nom: u.nom, prenom: u.prenom, email: u.email }); }
+    if (u) { 
+      this.form.patchValue({ nom: u.nom, prenom: u.prenom, email: u.email }); 
+      if (u.id) {
+        this.etudiantSvc.getByUtilisateur(u.id).subscribe({
+          next: (etu) => {
+            this.isEdit.set(true);
+            this.etudiantId.set(etu.id!);
+            this.form.patchValue({
+              telephone: etu.telephone,
+              matricule: etu.matricule,
+              filiere: etu.filiere,
+              niveau: etu.niveau,
+              cv: etu.cv
+            });
+          },
+          error: () => {
+            // Not found, will be created on submit
+          }
+        });
+      }
+    }
   }
 
   resetForm() {
@@ -250,11 +274,42 @@ export class EtudiantProfilComponent implements OnInit {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     this.loading.set(true);
     this.errorMsg.set(null);
-    // Profile update endpoint
-    setTimeout(() => {
+    
+    const u = this.auth.currentUser();
+    if (!u || !u.id) {
       this.loading.set(false);
-      this.successMsg.set('✅ Profil mis à jour avec succès !');
-      setTimeout(() => this.successMsg.set(null), 4000);
-    }, 800);
+      this.errorMsg.set('Utilisateur non connecté ou ID manquant');
+      return;
+    }
+    
+    const val = this.form.getRawValue();
+    const payload = {
+      matricule: val.matricule,
+      filiere: val.filiere,
+      niveau: val.niveau,
+      telephone: val.telephone,
+      cv: val.cv,
+      utilisateurId: u.id
+    };
+
+    console.log('Payload etudiant :', payload);
+
+    const req = this.isEdit() 
+      ? this.etudiantSvc.update(this.etudiantId()!, payload as any)
+      : this.etudiantSvc.create(payload as any);
+      
+    req.subscribe({
+      next: (etu) => {
+        this.loading.set(false);
+        this.successMsg.set('✅ Profil mis à jour avec succès !');
+        this.isEdit.set(true);
+        if (etu && etu.id) this.etudiantId.set(etu.id);
+        setTimeout(() => this.successMsg.set(null), 4000);
+      },
+      error: (err) => {
+        this.loading.set(false);
+        this.errorMsg.set(err.error?.message ?? err.error ?? err.message ?? 'Erreur lors de la mise à jour.');
+      }
+    });
   }
 }
